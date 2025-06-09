@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
             allowNull: false,
             fieldname: 'name',
         },
-        creatorId: { // TODO: Futura Chave Estrange para a tabela de usuários
+        creatorId: { 
             type: DataTypes.INTEGER,
             allowNull: false,
             fieldname: 'creator_id',
