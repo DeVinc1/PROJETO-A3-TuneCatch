@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     const Playlist = sequelize.define('Playlist', {
-        id:{
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
