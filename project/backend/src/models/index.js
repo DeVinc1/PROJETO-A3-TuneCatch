@@ -7,11 +7,13 @@ const User = require('./User')(sequelize);
 const Playlist = require('./Playlist')(sequelize);
 const Tags = require('./Tags')(sequelize);
 const Badges = require('./Badges')(sequelize);
-
+const Track = require('./Track')(sequelize);
 
 const UserPlaylistLiked = require('./UserPlaylistLiked')(sequelize);
 const UserFollow = require('./UserFollow')(sequelize);
 const UserBadge = require('./UserBadge')(sequelize);
+const PlaylistTrack = require('./PlaylistTrack')(sequelize);
+const PlaylistTag = require('./PlaylistTag')(sequelize);
 
 // --- Associações da Entidade Usuário --- //
 
@@ -75,13 +77,49 @@ Badges.belongsToMany(User, {
     as: 'usersWithBadges',
 });
 
+// Playlist e Track - Uma playlist pode ter várias tracks
+Playlist.belongsToMany(Track, {
+    through: PlaylistTrack,
+    foreignKey: 'playlist_id',
+    otherKey: 'track_id',
+    as: 'tracks',
+});
+
+// Track e Playlist - Uma track pode pertencer a várias playlists
+Track.belongsToMany(Playlist, {
+    through: PlaylistTrack,
+    foreignKey: 'track_id',
+    otherKey: 'playlist_id',
+    as: 'playlists',
+});
+
+// Playlist e Tags - Uma playlist pode ter várias tags
+Playlist.belongsToMany(Tags, {
+    through: PlaylistTag,
+    foreignKey: 'playlist_id',
+    otherKey: 'tag_id',
+    as: 'tags',
+});
+
+// Tags e Playlist - Uma tag pode ser associada a várias playlists
+Tags.belongsToMany(Playlist, {
+    through: PlaylistTag,
+    foreignKey: 'tag_id',
+    otherKey: 'playlist_id',
+    as: 'playlists',
+});
+
+
 module.exports = {
     sequelize,
     User,
     Playlist,
     Tags,
     Badges,
+    Track,
     UserPlaylistLiked,
     UserFollow,
     UserBadge,
+    PlaylistTrack,
+    PlaylistTag,
 };
