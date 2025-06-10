@@ -1,5 +1,5 @@
 const userRepository = require('../repositories/userRepository');
-const { hashPassword } = require('../../utils/authUtils');
+const { hashPassword, verifyPassword } = require('../../utils/authUtils');
 const { AppError } = require('../../utils/errorUtils');
 
 const registerNewUser = async ({ username, email, password, displayName, avatarURL }) => {
@@ -39,6 +39,27 @@ const registerNewUser = async ({ username, email, password, displayName, avatarU
     };
 };
 
+const loginUser = async (credential, password) => {
+    if (!credential || !password || typeof password !== 'string') {
+        throw new AppError('As credenciais enviadas estão incompletas ou incorretas.', 401);
+    }
+
+    const user = await userRepository.findOneByCredentials(credential);
+
+    if (!user || !(await verifyPassword(password, user.passwordHash))) {
+        throw new AppError('As credenciais enviadas estão incompletas ou incorretas.', 401);
+    }
+
+    if (user.isBanned) {
+        throw new AppError('Essa conta foi banida.', 403);
+    }
+
+    return {
+        idUserLogged: user.id,
+    }
+};
+
 module.exports = {
     registerNewUser,
+    loginUser,
 };

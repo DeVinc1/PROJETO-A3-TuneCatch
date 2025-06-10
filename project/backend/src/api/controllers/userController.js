@@ -22,6 +22,23 @@ const createUser = async (req, res, next) => {
     }
 };
 
+
+const login = async (req, res, next) => {
+    try {
+        const { credential, password } = req.body;
+
+        const user = await userService.loginUser(credential, password);
+
+        res.status(200).json({
+            message: 'Login realizado com sucesso.',
+            idUserLogged: user.idUserLogged,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createUser,
+    login,
 };

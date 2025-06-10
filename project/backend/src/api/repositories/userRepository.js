@@ -1,4 +1,5 @@
-const { User } = require('../models');
+const { User, sequelize } = require('../models');
+const { Op } = require('sequelize');
 
 const createUser = async (userData) => {
     const user = await User.create(userData);
@@ -14,6 +15,7 @@ const findOneByUsername = async (username) => {
     const user = await User.findOne({ where: { username } });
     return user;
 };
+
 
 module.exports = {
     createUser,
