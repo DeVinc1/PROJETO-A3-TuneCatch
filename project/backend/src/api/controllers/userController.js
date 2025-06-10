@@ -1,3 +1,4 @@
+const { get } = require('../routes/userRoutes');
 const userService = require('../services/userService');
 
 const createUser = async (req, res, next) => {
@@ -17,11 +18,10 @@ const createUser = async (req, res, next) => {
             ...newUser,
         });
     }
-    catch (error){
+    catch (error) {
         next(error);
     }
 };
-
 
 const login = async (req, res, next) => {
     try {
@@ -38,7 +38,30 @@ const login = async (req, res, next) => {
     }
 };
 
+const getUserByID = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await userService.getUserDetails(id);
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getUserByUsername = async (req, res, next) => {
+    try {
+        const { username } = req.params;
+        const user = await userService.getUserDetailsByUsername(username);
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 module.exports = {
     createUser,
     login,
+    getUserByID,
+    getUserByUsername
 };

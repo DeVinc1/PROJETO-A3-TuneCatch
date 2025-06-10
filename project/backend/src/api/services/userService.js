@@ -1,6 +1,7 @@
 const userRepository = require('../repositories/userRepository');
 const { hashPassword, verifyPassword } = require('../../utils/authUtils');
 const { AppError } = require('../../utils/errorUtils');
+const { get } = require('../routes/userRoutes');
 
 const registerNewUser = async ({ username, email, password, displayName, avatarURL }) => {
     if (!username || !email || !password) {
@@ -59,7 +60,28 @@ const loginUser = async (credential, password) => {
     }
 };
 
+const getUserDetails = async (userId) => {
+    const user = await userRepository.findUserById(userId);
+
+    if (!user) {
+        throw new AppError('Usuário não encontrado.', 404);
+    }
+
+    return user;
+};
+
+const getUserDetailsByUsername = async (username) => {
+    const user = await userRepository.findUserByUsername(username);
+    if (!user) {
+        throw new AppError('Usuário não encontrado.', 404);
+    }
+    return user;
+}
+
+
 module.exports = {
     registerNewUser,
     loginUser,
+    getUserDetails,
+    getUserDetailsByUsername
 };
