@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { sequelize } = require('./models');
+const { sequelize } = require('./api/models');
 
 async function startServer() {
     try {

@@ -14,4 +14,5 @@ module.exports = (sequelize) => {
         createdAt: 'granted_at',
         updatedAt: 'false', 
     });
+    return UserBadge;
 }
