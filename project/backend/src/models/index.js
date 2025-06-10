@@ -63,7 +63,7 @@ User.belongsToMany(User, {
 
 // Usuário e Badges - Um usuário pode ter várias badges
 User.belongsToMany(Badges, {
-    through: 'user_badge',
+    through: UserBadge,
     foreignKey: 'user_id',
     otherKey: 'badge_id',
     as: 'userBadges',
@@ -71,7 +71,7 @@ User.belongsToMany(Badges, {
 
 // Badges e Usuário - Uma badge pode ser adquirida por vários usuários
 Badges.belongsToMany(User, {
-    through: 'user_badge',
+    through: UserBadge,
     foreignKey: 'badge_id',
     otherKey: 'user_id',
     as: 'usersWithBadges',

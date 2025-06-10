@@ -9,10 +9,4 @@ module.exports = {
         timestamps: true,
         underscored: true,
     },
-     dialectOptions: {
-        ssl: {
-            require: process.env.DB_SSLMODE === 'require', 
-            rejectUnauthorized: false 
-        }
-    },
 };

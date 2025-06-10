@@ -1,26 +1,5 @@
 require('dotenv').config();
-
-const express = require('express');
-const cors = require('cors');
-
-const { sequelize } = require('./api/models');
-
-const userRoutes = require('./api/routes/userRoutes');
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.use('/', userRoutes);
-
-app.get('/maestro', (req, res) => {
-    res.send({
-        message: 'Bem-vindo ao TuneCatch API',
-        version: '1.0.0',
-        status: 'Servidor ativo'
-    });
-});
+const { sequelize } = require('./models');
 
 async function startServer() {
     try {
@@ -39,12 +18,4 @@ async function startServer() {
     }
 }
 
-
 startServer();
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-  console.log(`Servidor TuneCatch rodando na porta ${PORT}`);
-  console.log(`Acesse: http://localhost:${PORT}`);
-})
