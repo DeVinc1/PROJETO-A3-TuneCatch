@@ -58,10 +58,21 @@ const getUserByUsername = async (req, res, next) => {
     }
 };
 
+const getUsersByDisplayName = async (req, res, next) => {
+    try{
+        const { q } = req.query;
+        const usersList = await userService.getUsersByDisplayName(q);
+        res.status(200).json({ users: usersList });
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 module.exports = {
     createUser,
     login,
     getUserByID,
-    getUserByUsername
+    getUserByUsername,
+    getUsersByDisplayName
 };

@@ -71,11 +71,19 @@ const findUserByUsername = async (username) => {
     return user;
 };
 
+const findUsersByDisplayName = async (displayName) => {
+    const user = await User.findAll({
+        where: { displayName },
+        attributes:['id', 'username', 'displayName', 'avatarURL'],
+    });
+    return user;
+};
 
 module.exports = {
     createUser,
     findOneByEmail,
     findOneByUsername,
     findUserById,
-    findUserByUsername
+    findUserByUsername,
+    findUsersByDisplayName
 };

@@ -78,10 +78,18 @@ const getUserDetailsByUsername = async (username) => {
     return user;
 }
 
+const getUsersByDisplayName = async (displayNameQuery) => {
+    if(!displayNameQuery || typeof displayNameQuery !== 'string' || displayNameQuery.trim() === '') {
+        return [];
+    }
+    const users = await userRepository.findUsersByDisplayName(displayNameQuery);
+    return users;
+}
 
 module.exports = {
     registerNewUser,
     loginUser,
     getUserDetails,
-    getUserDetailsByUsername
+    getUserDetailsByUsername,
+    getUsersByDisplayName
 };
