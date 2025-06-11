@@ -60,11 +60,22 @@ const updateBadge = async (req, res, next) => {
   }
 };
 
+const deleteBadge = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await badgeService.deleteBadge(id);
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
     createBadge,
     getAllBadges,
     getBadgeById,
     getBadgeByName,
-    updateBadge
+    updateBadge,
+    deleteBadge
 };

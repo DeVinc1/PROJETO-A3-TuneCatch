@@ -28,9 +28,16 @@ router.get('/badges/nome/:name', badgeController.getBadgeByName);
 router.get('/badges/:id', badgeController.getBadgeById);
 
 /**
- * @route   PUT maestro/badges/:id
- * @desc    Atualiza uma badge existente.
+ * @Route   PUT maestro/badges/:id
+ * @Desc    Atualiza uma badge existente.
  */
 router.put('/badges/:id', badgeController.updateBadge);
+
+/**
+ * @Route   DELETE /:id
+ * @Desc    Exclui uma badge existente.
+ */
+router.delete('/badges/:id', badgeController.deleteBadge);
+
 
 module.exports = router;

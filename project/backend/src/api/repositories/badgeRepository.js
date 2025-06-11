@@ -20,10 +20,17 @@ const findById = async (id) => {
   return badge;
 }
 
+const deleteBadgeById = async (badgeId) => {
+  const deletedRowCount = await Badges.destroy({
+    where: { id: badgeId },
+  });
+  return deletedRowCount;
+};
 
 module.exports = {
   createBadge,
   findByName,
   findAllBadges,
   findById,
+  deleteBadgeById
 };

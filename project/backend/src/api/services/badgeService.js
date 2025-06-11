@@ -71,10 +71,19 @@ const updateBadge = async (badgeId, updateData) => {
   return badge;
 };
 
+const deleteBadge = async (badgeId) => {
+  const result = await badgeRepository.deleteBadgeById(badgeId);
+
+  if (result === 0) {
+    throw new AppError('A badge a ser excluída não foi encontrada.', 404);
+  }
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
   getBadgeById,
   getBadgeByName,
   updateBadge,
+  deleteBadge
 };
