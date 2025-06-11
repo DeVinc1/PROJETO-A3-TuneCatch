@@ -46,9 +46,25 @@ const getBadgeByName = async (req, res, next) => {
   }
 };
 
+const updateBadge = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, description, iconURL } = req.body;
+    const updatedBadge = await badgeService.updateBadge(id, { name, description, iconURL });
+    res.status(200).json({
+      message: 'Badge modificada com sucesso',
+      badge: updatedBadge,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
     createBadge,
     getAllBadges,
     getBadgeById,
-    getBadgeByName
+    getBadgeByName,
+    updateBadge
 };

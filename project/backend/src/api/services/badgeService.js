@@ -43,9 +43,38 @@ const getBadgeByName = async (badgeName) => {
   return badge;
 };
 
+const updateBadge = async (badgeId, updateData) => {
+  const badge = await badgeRepository.findById(badgeId);
+  if (!badge) {
+    throw new AppError('A badge referenciada não existe.', 404);
+  }
+
+  const { name, description, iconURL } = updateData;
+
+  if (!name || !description || !iconURL) {
+    throw new AppError('Nome, descrição e URL do ícone são obrigatórios.', 400);
+  }
+
+  if (name && name !== badge.name) {
+    const existingBadge = await badgeRepository.findByName(name);
+    if (existingBadge) {
+      throw new AppError('Esse nome de badge já existe no sistema!', 409);
+    }
+    badge.name = name;
+  }
+
+  badge.description = description;
+
+  badge.iconURL = iconURL;
+  
+  await badge.save();
+  return badge;
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
   getBadgeById,
-  getBadgeByName
+  getBadgeByName,
+  updateBadge,
 };

@@ -27,5 +27,10 @@ router.get('/badges/nome/:name', badgeController.getBadgeByName);
  */
 router.get('/badges/:id', badgeController.getBadgeById);
 
+/**
+ * @route   PUT maestro/badges/:id
+ * @desc    Atualiza uma badge existente.
+ */
+router.put('/badges/:id', badgeController.updateBadge);
 
 module.exports = router;
