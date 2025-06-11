@@ -86,10 +86,67 @@ const getUsersByDisplayName = async (displayNameQuery) => {
     return users;
 }
 
+const utils_validateUserPassword = async (userID, currentPassword) => {
+  if (!currentPassword) {
+    throw new AppError('A senha atual é obrigatória para realizar esta operação.', 400);
+  }
+  const user = await userRepository.findUserAllInfo(userID);
+
+  if (!user) {
+    throw new AppError('Usuário não encontrado.', 404);
+  }
+  const isMatch = await verifyPassword(currentPassword, user.passwordHash);
+  if (!isMatch) {
+    throw new AppError('A senha atual está incorreta.', 403);
+  }
+  return user;
+};
+
+const updateProfileDetails = async (userID, profileData) => {
+  const { currentPassword, username, email, displayName, avatarURL } = profileData;
+  const user = await utils_validateUserPassword(userID, currentPassword);
+
+  if (username && username !== user.username) {
+    if (await userRepository.findOneByUsername(username)) {
+      throw new AppError('Nome de usuário já está em uso.', 409, 'username');
+    }
+    user.username = username;
+  }
+  
+  
+  if (email && email !== user.email) {
+    if (await userRepository.findOneByEmail(email)) {
+      throw new AppError('Email já está em uso.', 409, 'email');
+    }
+    user.email = email;
+  }
+  
+  if (displayName) user.displayName = displayName;
+  if (avatarURL) user.avatarURL = avatarURL;
+  
+  await user.save();
+
+  return userRepository.findUserById(userID);
+};
+
+const changePassword = async (userID, passwordData) => {
+  const { currentPassword, newPassword } = passwordData;
+  if (!newPassword) {
+    throw new AppError('A nova senha é obrigatória.', 400);
+  }
+
+  const user = await utils_validateUserPassword(userID, currentPassword);
+  
+  user.passwordHash = await hashPassword(newPassword);
+  await user.save();
+};
+
 module.exports = {
     registerNewUser,
     loginUser,
     getUserDetails,
     getUserDetailsByUsername,
-    getUsersByDisplayName
+    getUsersByDisplayName,
+    updateProfileDetails,
+    changePassword,
 };

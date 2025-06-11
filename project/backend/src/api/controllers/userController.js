@@ -59,7 +59,7 @@ const getUserByUsername = async (req, res, next) => {
 };
 
 const getUsersByDisplayName = async (req, res, next) => {
-    try{
+    try {
         const { q } = req.query;
         const usersList = await userService.getUsersByDisplayName(q);
         res.status(200).json({ users: usersList });
@@ -68,11 +68,48 @@ const getUsersByDisplayName = async (req, res, next) => {
     }
 }
 
+const updateProfile = async (req, res, next) => {
+    try{
+        const { id } = req.params;
+        const { currentPassword, username, email, displayName, avatarURL } = req.body;
+        const updatedUser = await userService.updateProfileDetails(id, {
+            currentPassword,
+            username,
+            email,
+            displayName,
+            avatarURL
+        });
+        res.status(200).json({
+            message: 'Perfil atualizado com sucesso.',
+            user: updatedUser,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+const updatePassword = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { currentPassword, newPassword } = req.body;
+
+        await userService.changePassword(id, {currentPassword, newPassword});
+
+        res.status(200).json({
+            message: 'Senha atualizada com sucesso.',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     createUser,
     login,
     getUserByID,
     getUserByUsername,
-    getUsersByDisplayName
+    getUsersByDisplayName,
+    updateProfile,
+    updatePassword
 };

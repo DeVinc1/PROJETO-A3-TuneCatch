@@ -16,6 +16,18 @@ const findOneByUsername = async (username) => {
     return user;
 };
 
+const findOneByCredentials = async (credential) => {
+  const user = await User.findOne({
+    where: {
+      [Op.or]: [
+        { email: credential },
+        { username: credential }
+      ]
+    }
+  });
+  return user;
+};
+
 const findUserById = async (id) => {
     const user = await User.findByPk(id, {
         attributes: {
@@ -79,12 +91,17 @@ const findUsersByDisplayName = async (displayName) => {
     return user;
 };
 
-
+const findUserAllInfo = async (id) => {
+    const user = await User.findByPk(id);
+    return user;
+}
 module.exports = {
     createUser,
     findOneByEmail,
     findOneByUsername,
+    findOneByCredentials,
     findUserById,
     findUserByUsername,
     findUsersByDisplayName,
+    findUserAllInfo
 }
