@@ -79,11 +79,12 @@ const findUsersByDisplayName = async (displayName) => {
     return user;
 };
 
+
 module.exports = {
     createUser,
     findOneByEmail,
     findOneByUsername,
     findUserById,
     findUserByUsername,
-    findUsersByDisplayName
-};
+    findUsersByDisplayName,
+}
