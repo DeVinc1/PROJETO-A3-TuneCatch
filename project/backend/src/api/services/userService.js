@@ -27,7 +27,7 @@ const registerNewUser = async ({ username, email, password, displayName, avatarU
         displayName: displayName,
         avatarURL: avatarURL && avatarURL.trim() !== ''
             ? avatarURL
-            : 'https://example.com/default-avatar.png',
+            : 'https://example.com/default-avatar.png', // TODO: Mudar para um link de avatar padrão real
     };
 
     const newUser = await userRepository.createUser(newUserData);
@@ -141,6 +141,38 @@ const changePassword = async (userID, passwordData) => {
   await user.save();
 };
 
+const toggleFollowUser = async (followerId, followedId) => {
+  if (followerId == followedId) {
+    throw new AppError('Não é possível seguir a si mesmo!', 403);
+  }
+
+  const followerUser = await userRepository.findUserWithFollowing(followerId);
+  const userToFollow = await userRepository.findUserById(followedId);
+
+  if (!followerUser || !userToFollow) {
+    throw new AppError('Usuário não encontrado.', 404);
+  }
+
+  const isAlreadyFollowing = followerUser.following.some(
+    (followedUser) => followedUser.id == followedId
+  );
+
+
+  if (isAlreadyFollowing) {
+    await followerUser.removeFollowing(userToFollow);
+  } else {
+    await followerUser.addFollowing(userToFollow);
+  }
+
+  const updatedFollower = await userRepository.findUserWithFollowing(followerId);
+
+  return {
+    id: updatedFollower.id,
+    username: updatedFollower.username,
+    following: updatedFollower.following.map(user => ({ id: user.id, username: user.username })),
+  };
+};
+
 module.exports = {
     registerNewUser,
     loginUser,
@@ -149,4 +181,5 @@ module.exports = {
     getUsersByDisplayName,
     updateProfileDetails,
     changePassword,
+    toggleFollowUser
 };

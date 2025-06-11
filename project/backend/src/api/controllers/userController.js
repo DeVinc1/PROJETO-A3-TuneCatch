@@ -104,6 +104,26 @@ const updatePassword = async (req, res, next) => {
     }
 };
 
+const followUser = async (req, res, next) => {
+  try {
+    const { id_usuario } = req.params; // ID de quem está seguindo
+    const { idToBeFollowed } = req.body; // ID de quem será seguido
+
+    if (!idToBeFollowed) {
+        throw new AppError('O ID do usuário a ser seguido é obrigatório.', 400);
+    }
+
+    const result = await userService.toggleFollowUser(id_usuario, idToBeFollowed);
+
+    res.status(200).json({
+      message: 'Lista de usuários seguidos atualizada!',
+      user: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createUser,
     login,
@@ -111,5 +131,6 @@ module.exports = {
     getUserByUsername,
     getUsersByDisplayName,
     updateProfile,
-    updatePassword
+    updatePassword,
+    followUser
 };

@@ -95,6 +95,18 @@ const findUserAllInfo = async (id) => {
     const user = await User.findByPk(id);
     return user;
 }
+
+const findUserWithFollowing = async (userId) => {
+  const user = await User.findByPk(userId, {
+    include: {
+      model: User,
+      as: 'following',
+      attributes: ['id', 'username'],
+    },
+  });
+  return user;
+};
+
 module.exports = {
     createUser,
     findOneByEmail,
@@ -103,5 +115,6 @@ module.exports = {
     findUserById,
     findUserByUsername,
     findUsersByDisplayName,
-    findUserAllInfo
+    findUserAllInfo,
+    findUserWithFollowing
 }
