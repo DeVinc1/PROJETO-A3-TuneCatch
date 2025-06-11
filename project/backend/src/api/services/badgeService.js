@@ -1,4 +1,5 @@
 const badgeRepository = require('../repositories/badgeRepository');
+const userRepository = require('../repositories/userRepository'); 
 const { AppError } = require('../../utils/errorUtils');
 
 
@@ -79,11 +80,33 @@ const deleteBadge = async (badgeId) => {
   }
 };
 
+const grantBadgeToUser = async (userId, badgeId, isVisibleOnProfile) => {
+  const user = await userRepository.findUserById(userId);
+  if (!user) {
+    throw new AppError('O perfil do usuário não foi encontrado.', 404);
+  }
+
+  const badge = await badgeRepository.findById(badgeId);
+  if (!badge) {
+    throw new AppError('A badge com o ID fornecido não foi encontrada.', 404);
+  }
+
+  const alreadyHasBadge = await user.hasUserBadges(badge);
+  if (alreadyHasBadge) {
+    throw new AppError('Este usuário já possui esta badge.', 409);
+  }
+
+  await user.addUserBadges(badge, {
+    through: { isVisibleOnProfile: !!isVisibleOnProfile } 
+  });
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
   getBadgeById,
   getBadgeByName,
   updateBadge,
-  deleteBadge
+  deleteBadge,
+  grantBadgeToUser,
 };

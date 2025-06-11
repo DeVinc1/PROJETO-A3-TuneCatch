@@ -39,5 +39,10 @@ router.put('/badges/:id', badgeController.updateBadge);
  */
 router.delete('/badges/:id', badgeController.deleteBadge);
 
+/**
+ * @Route   POST /conceder/:id_usuario
+ * @Desc    Concede uma badge a um usuário.
+ */
+router.post('/badges/conceder/:id_usuario', badgeController.grantBadge);
 
 module.exports = router;

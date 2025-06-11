@@ -1,4 +1,3 @@
-const { get } = require('../routes/badgeRoutes');
 const badgeService = require('../services/badgeService');
 
 const createBadge = async (req, res, next) => {
@@ -71,11 +70,29 @@ const deleteBadge = async (req, res, next) => {
   }
 };
 
+const grantBadge = async (req, res, next) => {
+  try {
+    const { id_usuario } = req.params;
+    const { badgeId, isVisibleOnProfile } = req.body;
+
+    if (!badgeId) {
+      throw new AppError('O ID da badge é obrigatório no corpo da requisição.', 400);
+    }
+    
+    await badgeService.grantBadgeToUser(id_usuario, badgeId, isVisibleOnProfile);
+
+    res.status(200).json({ message: 'Badge concedida ao usuário com sucesso!' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createBadge,
     getAllBadges,
     getBadgeById,
     getBadgeByName,
     updateBadge,
-    deleteBadge
+    deleteBadge,
+    grantBadge
 };
