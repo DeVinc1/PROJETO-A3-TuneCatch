@@ -144,6 +144,17 @@ const banUser = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id_usuario } = req.params;
+    await userService.deleteUser(id_usuario);
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createUser,
     login,
@@ -153,5 +164,6 @@ module.exports = {
     updateProfile,
     updatePassword,
     followUser,
-    banUser
+    banUser,
+    deleteUser
 };

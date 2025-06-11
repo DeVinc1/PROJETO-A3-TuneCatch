@@ -107,6 +107,13 @@ const findUserWithFollowing = async (userId) => {
   return user;
 };
 
+const deleteUserById = async (userId) => {
+  const deletedRowCount = await User.destroy({
+    where: { id: userId },
+  });
+  return deletedRowCount;
+};
+
 module.exports = {
     createUser,
     findOneByEmail,
@@ -116,5 +123,6 @@ module.exports = {
     findUserByUsername,
     findUsersByDisplayName,
     findUserAllInfo,
-    findUserWithFollowing
+    findUserWithFollowing,
+    deleteUserById,
 }

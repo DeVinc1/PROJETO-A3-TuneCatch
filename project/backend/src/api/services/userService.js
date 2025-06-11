@@ -197,6 +197,14 @@ const banUser = async (adminId, userIdToBan) => {
   };
 };
 
+const deleteUser = async (userId) => {
+  const result = await userRepository.deleteUserById(userId);
+
+  if (result === 0) {
+    throw new AppError('A conta a ser excluída não existe.', 404);
+  }
+};
+
 module.exports = {
     registerNewUser,
     loginUser,
@@ -207,4 +215,5 @@ module.exports = {
     changePassword,
     toggleFollowUser,
     banUser,
+    deleteUser,
 };

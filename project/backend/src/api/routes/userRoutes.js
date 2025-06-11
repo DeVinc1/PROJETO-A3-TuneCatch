@@ -58,4 +58,11 @@ router.post('/usuario/seguir/:id_usuario', userController.followUser);
  */
 router.post('/usuario/banir-perfil/:id_usuario', userController.banUser);
 
+/**
+ * @Route   DELETE /usuario/:id_usuario
+ * @Desc    Exclui um perfil de usuário.
+ */
+router.delete('/usuario/:id_usuario', userController.deleteUser);
+
+
 module.exports = router;
