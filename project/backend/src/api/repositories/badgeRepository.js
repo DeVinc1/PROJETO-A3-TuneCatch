@@ -20,18 +20,10 @@ const findById = async (id) => {
   return badge;
 }
 
-const findBadgeByName = async (name) => {
-  const badge = await badgeRepository.findByName(name);
-  if (!badge) {
-    throw new AppError('Badge com esse nome não encontrada.', 404);
-  }
-  return badge;
-};
 
 module.exports = {
   createBadge,
   findByName,
   findAllBadges,
   findById,
-  findBadgeByName
 };

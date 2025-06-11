@@ -16,9 +16,16 @@ router.post('/badges', badgeController.createBadge);
 router.get('/badges', badgeController.getAllBadges);
 
 /**
+ * @Route   GET maestro/badges/nome/:name
+ * @Desc    Retorna uma badge específica por meio de seu nome.
+ */
+router.get('/badges/nome/:name', badgeController.getBadgeByName);
+
+/**
  * @Route   GET maestro/badges/:id
  * @Desc    Retorna uma badge específica pelo ID.
  */
 router.get('/badges/:id', badgeController.getBadgeById);
+
 
 module.exports = router;

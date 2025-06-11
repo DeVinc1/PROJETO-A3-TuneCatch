@@ -1,3 +1,4 @@
+const { get } = require('../routes/badgeRoutes');
 const badgeService = require('../services/badgeService');
 
 const createBadge = async (req, res, next) => {
@@ -35,8 +36,19 @@ const getBadgeById = async (req, res, next) => {
   }
 };
 
+const getBadgeByName = async (req, res, next) => {
+  try {
+    const { name } = req.params;
+    const badge = await badgeService.getBadgeByName(name);
+    res.status(200).json(badge);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createBadge,
     getAllBadges,
-    getBadgeById
+    getBadgeById,
+    getBadgeByName
 };

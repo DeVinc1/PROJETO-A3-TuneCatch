@@ -35,8 +35,17 @@ const getBadgeById = async (badgeId) => {
   return badge;
 };
 
+const getBadgeByName = async (badgeName) => {
+  const badge = await badgeRepository.findByName(badgeName);
+  if (!badge) {
+    throw new AppError('Badge não encontrada.', 404);
+  }
+  return badge;
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
-  getBadgeById
+  getBadgeById,
+  getBadgeByName
 };
