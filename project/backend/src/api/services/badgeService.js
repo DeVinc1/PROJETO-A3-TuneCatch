@@ -22,6 +22,21 @@ const createNewBadge = async ({ name, description, iconURL }) => {
   };
 };
 
+const getAllBadges = async () => {
+  const badges = await badgeRepository.findAllBadges();
+  return badges;
+};
+
+const getBadgeById = async (badgeId) => {
+  const badge = await badgeRepository.findById(badgeId);
+  if (!badge) {
+    throw new AppError('Badge não encontrada.', 404);
+  }
+  return badge;
+};
+
 module.exports = {
   createNewBadge,
+  getAllBadges,
+  getBadgeById
 };

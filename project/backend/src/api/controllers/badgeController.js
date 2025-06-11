@@ -16,6 +16,27 @@ const createBadge = async (req, res, next) => {
     }
 };
 
+const getAllBadges = async (req, res, next) => {
+  try {
+    const badges = await badgeService.getAllBadges();
+    res.status(200).json({ badges });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getBadgeById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const badge = await badgeService.getBadgeById(id);
+    res.status(200).json(badge);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createBadge,
+    getAllBadges,
+    getBadgeById
 };
