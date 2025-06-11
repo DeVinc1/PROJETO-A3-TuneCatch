@@ -16,7 +16,7 @@ router.post('/usuario', userController.createUser);
 router.post('/usuario/fazer-login', userController.login);
 
 /**
- *  @Route  GET /usuario/nome-exibicao?q={query}
+ *  @Route  GET /maestro/usuario/nome-exibicao?q={query}
  *  @Desc   Busca usuários por nome de exibição (passado por query na URL)
  */
 router.get('/usuario/nome-exibicao', userController.getUsersByDisplayName);
@@ -46,9 +46,16 @@ router.put('/usuario/:id/detalhes', userController.updateProfile);
 router.put('/usuario/:id/senha', userController.updatePassword);
 
 /**
- * @route   POST /usuario/seguir/:id_usuario
- * @desc    Segue ou deixa de seguir um usuário.
+ * @Route   POST /maestro/usuario/seguir/:id_usuario
+ * @Desc    Segue ou deixa de seguir um usuário.
  */
 router.post('/usuario/seguir/:id_usuario', userController.followUser);
+
+/**
+ * @Route   POST /maestro/usuario/banir-perfil/:id_usuario
+ * @Desc    Bane um usuário do sistema (requer admin).
+ * @Access  Admin
+ */
+router.post('/usuario/banir-perfil/:id_usuario', userController.banUser);
 
 module.exports = router;

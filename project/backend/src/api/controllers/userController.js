@@ -124,6 +124,26 @@ const followUser = async (req, res, next) => {
   }
 };
 
+const banUser = async (req, res, next) => {
+  try {
+    const { id_usuario } = req.params;
+    const { idToBeBanned } = req.body;
+
+    if (!idToBeBanned) {
+        throw new AppError('O ID do usuário a ser banido é obrigatório.', 400);
+    }
+    
+    const bannedUserInfo = await userService.banUser(id_usuario, idToBeBanned);
+
+    res.status(200).json({
+      message: 'Usuário banido com sucesso!',
+      userBanned: bannedUserInfo,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createUser,
     login,
@@ -132,5 +152,6 @@ module.exports = {
     getUsersByDisplayName,
     updateProfile,
     updatePassword,
-    followUser
+    followUser,
+    banUser
 };

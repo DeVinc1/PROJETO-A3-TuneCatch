@@ -173,6 +173,30 @@ const toggleFollowUser = async (followerId, followedId) => {
   };
 };
 
+const banUser = async (adminId, userIdToBan) => {
+  const adminUser = await userRepository.findUserById(adminId);
+  if (!adminUser || !adminUser.isAdmin) {
+    throw new AppError('Somente administradores podem banir um usuário!', 401);
+  }
+
+  const userToBan = await userRepository.findUserAllInfo(userIdToBan);
+  if (!userToBan) {
+    throw new AppError('A conta a ser banida não existe.', 404);
+  }
+
+  if (userToBan.isBanned) {
+    throw new AppError('Essa conta já foi banida.', 409);
+  }
+
+   userToBan.isBanned = true;
+  await userToBan.save();
+
+  return {
+    id: userToBan.id,
+    username: userToBan.username,
+  };
+};
+
 module.exports = {
     registerNewUser,
     loginUser,
@@ -181,5 +205,6 @@ module.exports = {
     getUsersByDisplayName,
     updateProfileDetails,
     changePassword,
-    toggleFollowUser
+    toggleFollowUser,
+    banUser,
 };
