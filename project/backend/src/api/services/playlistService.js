@@ -73,7 +73,23 @@ const searchPublicPlaylists = async (searchQuery) => {
   return await playlistRepository.findPublicPlaylistsByName(searchQuery);
 };
 
+const getPlaylistsByCreator = async (creatorId) => {
+  const creator = await userRepository.findUserById(creatorId);
+  if (!creator) {
+      throw new AppError('Utilizador não encontrado.', 404);
+  }
 
+  return await playlistRepository.findAllByCreatorId(creatorId);
+};
+
+const getPublicPlaylistsByCreator = async (creatorId) => {
+  const creator = await userRepository.findUserById(creatorId);
+  if (!creator) {
+      throw new AppError('Utilizador não encontrado.', 404);
+  }
+
+  return await playlistRepository.findPublicPlaylistsByCreatorId(creatorId);
+};
 
 module.exports = {
   createNewPlaylist,
@@ -81,5 +97,7 @@ module.exports = {
   deletePlaylist,
   getAllPlaylists,
   getPlaylistById,
-  searchPublicPlaylists
+  searchPublicPlaylists,
+  getPlaylistsByCreator,
+  getPublicPlaylistsByCreator
 };

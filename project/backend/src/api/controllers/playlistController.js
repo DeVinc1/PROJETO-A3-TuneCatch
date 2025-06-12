@@ -81,11 +81,33 @@ const searchPublicPlaylists = async (req, res, next) => {
     }
 };
 
+const getPlaylistsByCreator = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const playlists = await playlistService.getPlaylistsByCreator(id_usuario);
+        res.status(200).json({ playlists });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getPublicPlaylistsByCreator = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const playlists = await playlistService.getPublicPlaylistsByCreator(id_usuario);
+        res.status(200).json({ playlists });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
   deletePlaylist,
   getAllPlaylists,
   getPlaylistById,
-  searchPublicPlaylists
+  searchPublicPlaylists,
+  getPlaylistsByCreator,
+  getPublicPlaylistsByCreator
 };

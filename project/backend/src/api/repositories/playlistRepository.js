@@ -37,7 +37,7 @@ const findAllPlaylists = async () => {
       as: 'creator',
       attributes: ['id', 'username']
     },
-    order: [['date_created', 'DESC']] // Ordena pelas mais recentes
+    order: [['date_created', 'DESC']] 
   });
 };
 
@@ -58,10 +58,42 @@ const findPublicPlaylistsByName = async (nameQuery) => {
   });
 };
 
+const findAllByCreatorId = async (userId) => {
+    return Playlist.findAll({
+        where: {
+            creatorId: userId
+        },
+        include: {
+            model: User,
+            as: 'creator',
+            attributes: ['id', 'username', 'displayName']
+        },
+        order: [['date_created', 'DESC']]
+    });
+};
+
+const findPublicPlaylistsByCreatorId = async (userId) => {
+    return Playlist.findAll({
+        where: {
+            creatorId: userId,
+            isVisible: true
+        },
+        include: {
+            model: User,
+            as: 'creator',
+            attributes: ['id', 'username', 'displayName']
+        },
+        order: [['date_created', 'DESC']]
+    });
+};
+
+
 module.exports = {
   createPlaylist,
   findPlaylistById,
   deletePlaylistById,
   findAllPlaylists,
-  findPublicPlaylistsByName
+  findPublicPlaylistsByName,
+  findAllByCreatorId,
+  findPublicPlaylistsByCreatorId
 };
