@@ -101,6 +101,18 @@ const grantBadgeToUser = async (userId, badgeId, isVisibleOnProfile) => {
   });
 };
 
+const setBadgeVisibility = async (userId, badgeId, isVisible) => {
+  if (typeof isVisible !== 'boolean') {
+    throw new AppError('O campo "isVisible" é obrigatório e deve ser um booleano (true/false).', 400);
+  }
+
+  const result = await badgeRepository.updateUserBadgeVisibility(userId, badgeId, isVisible);
+
+  if (!result) {
+    throw new AppError('O usuário não possui a badge especificada.', 404);
+  }
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
@@ -109,4 +121,5 @@ module.exports = {
   updateBadge,
   deleteBadge,
   grantBadgeToUser,
+  setBadgeVisibility
 };

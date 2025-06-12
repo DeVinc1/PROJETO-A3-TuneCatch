@@ -87,6 +87,23 @@ const grantBadge = async (req, res, next) => {
   }
 };
 
+const setVisibility = async (req, res, next) => {
+  try {
+    const { id_usuario } = req.params;
+    const { badgeId, isVisible } = req.body;
+
+    if (!badgeId) {
+        throw new AppError('O ID da badge é obrigatório no corpo da requisição.', 400);
+    }
+
+    await badgeService.setBadgeVisibility(id_usuario, badgeId, isVisible);
+
+    res.status(200).json({ message: 'Visibilidade da badge atualizada com sucesso!' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
     createBadge,
     getAllBadges,
@@ -94,5 +111,6 @@ module.exports = {
     getBadgeByName,
     updateBadge,
     deleteBadge,
-    grantBadge
+    grantBadge,
+    setVisibility
 };

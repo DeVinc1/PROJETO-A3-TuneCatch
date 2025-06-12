@@ -1,4 +1,4 @@
-const { Badges } = require('../models');
+const { Badges, UserBadge } = require('../models');
 
 const createBadge = async (badgeData) => {
   const badge = await Badges.create(badgeData);
@@ -27,10 +27,28 @@ const deleteBadgeById = async (badgeId) => {
   return deletedRowCount;
 };
 
+const updateUserBadgeVisibility = async (userId, badgeId, isVisible) => {
+  const userBadgeLink = await UserBadge.findOne({
+    where: {
+      user_id: userId,
+      badge_id: badgeId,
+    },
+  });
+
+  if (userBadgeLink) {
+    userBadgeLink.isVisibleOnProfile = isVisible;
+    await userBadgeLink.save();
+  }
+
+  return userBadgeLink;
+};
+
+
 module.exports = {
   createBadge,
   findByName,
   findAllBadges,
   findById,
-  deleteBadgeById
+  deleteBadgeById,
+  updateUserBadgeVisibility
 };

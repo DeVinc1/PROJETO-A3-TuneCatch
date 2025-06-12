@@ -34,15 +34,21 @@ router.get('/badges/:id', badgeController.getBadgeById);
 router.put('/badges/:id', badgeController.updateBadge);
 
 /**
- * @Route   DELETE /:id
+ * @Route   DELETE maestro/badges/:id
  * @Desc    Exclui uma badge existente.
  */
 router.delete('/badges/:id', badgeController.deleteBadge);
 
 /**
- * @Route   POST /conceder/:id_usuario
+ * @Route   POST  maestro/badges/conceder/:id_usuario
  * @Desc    Concede uma badge a um usuário.
  */
 router.post('/badges/conceder/:id_usuario', badgeController.grantBadge);
+
+/**
+ * @route   POST  maestro/badges/visibilidade/:id_usuario
+ * @desc    Altera a visibilidade de uma badge que um usuário possui.
+ */
+router.post('/badges/alterar-visibilidade/:id_usuario', badgeController.setVisibility);
 
 module.exports = router;
