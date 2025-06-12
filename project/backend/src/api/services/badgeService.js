@@ -1,6 +1,7 @@
 const badgeRepository = require('../repositories/badgeRepository');
 const userRepository = require('../repositories/userRepository'); 
 const { AppError } = require('../../utils/errorUtils');
+const { get } = require('../routes/badgeRoutes');
 
 
 const createNewBadge = async ({ name, description, iconURL }) => {
@@ -113,6 +114,31 @@ const setBadgeVisibility = async (userId, badgeId, isVisible) => {
   }
 };
 
+const getBadgesForUser = async (userId) => {
+  const userWithBadges = await badgeRepository.findUserBadges(userId);
+
+  if (!userWithBadges) {
+    throw new AppError('Usuário não encontrado.', 404);
+  }
+  
+  const formattedBadges = userWithBadges.userBadges.map(badge => {
+    return {
+      id: badge.id,
+      name: badge.name,
+      description: badge.description,
+      iconURL: badge.iconURL,
+      isVisibleOnProfile: badge.UserBadge.isVisibleOnProfile,
+      granted_at: badge.UserBadge.granted_at,
+    }
+  });
+
+  return {
+    userId: userWithBadges.id,
+    username: userWithBadges.username,
+    badges: formattedBadges,
+  };
+};
+
 module.exports = {
   createNewBadge,
   getAllBadges,
@@ -121,5 +147,6 @@ module.exports = {
   updateBadge,
   deleteBadge,
   grantBadgeToUser,
-  setBadgeVisibility
+  setBadgeVisibility,
+  getBadgesForUser,
 };

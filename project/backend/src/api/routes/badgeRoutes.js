@@ -51,4 +51,11 @@ router.post('/badges/conceder/:id_usuario', badgeController.grantBadge);
  */
 router.post('/badges/alterar-visibilidade/:id_usuario', badgeController.setVisibility);
 
+/**
+ * @route   GET   maestro/badges/usuario/:id_usuario
+ * @desc    Busca todas as badges de um usuário específico.
+ * @access  Public
+ */
+router.get('/badges/usuario/:id_usuario', badgeController.getUserBadges);
+
 module.exports = router;
