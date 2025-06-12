@@ -57,9 +57,20 @@ const getAllPlaylists = async () => {
   return await playlistRepository.findAllPlaylists();
 };
 
+
+const getPlaylistById = async (playlistId) => {
+  const playlist = await playlistRepository.findPlaylistById(playlistId);
+  if (!playlist) {
+    throw new AppError('Playlist não encontrada.', 404);
+  }
+  return playlist;
+};
+
+
 module.exports = {
   createNewPlaylist,
   updatePlaylistDetails,
   deletePlaylist,
-  getAllPlaylists
+  getAllPlaylists,
+  getPlaylistById
 };

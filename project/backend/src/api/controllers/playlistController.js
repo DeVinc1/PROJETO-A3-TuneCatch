@@ -1,3 +1,4 @@
+const { get } = require('../routes/playlistRoutes');
 const playlistService = require('../services/playlistService');
 
 const createPlaylist = async (req, res, next) => {
@@ -60,9 +61,20 @@ const getAllPlaylists = async (req, res, next) => {
   }
 };
 
+const getPlaylistById = async (req, res, next) => {
+  try {
+    const { id_playlist } = req.params;
+    const playlist = await playlistService.getPlaylistById(id_playlist);
+    res.status(200).json(playlist);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
   deletePlaylist,
-  getAllPlaylists
+  getAllPlaylists,
+  getPlaylistById
 };
