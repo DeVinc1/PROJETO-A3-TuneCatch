@@ -1,6 +1,7 @@
 const playlistRepository = require('../repositories/playlistRepository');
 const userRepository = require('../repositories/userRepository');
 const { AppError } = require('../../utils/errorUtils');
+const { get } = require('../routes/playlistRoutes');
 
 const createNewPlaylist = async (creatorId, playlistDetails) => {
   const { name, description, isVisible, coverImageURL } = playlistDetails;
@@ -52,9 +53,13 @@ const deletePlaylist = async (playlistId) => {
   }
 };
 
+const getAllPlaylists = async () => {
+  return await playlistRepository.findAllPlaylists();
+};
 
 module.exports = {
   createNewPlaylist,
   updatePlaylistDetails,
-  deletePlaylist
+  deletePlaylist,
+  getAllPlaylists
 };

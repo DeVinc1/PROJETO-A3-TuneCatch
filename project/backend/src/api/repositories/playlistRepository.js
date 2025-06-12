@@ -29,9 +29,20 @@ const deletePlaylistById = async (playlistId) => {
   return deletedRowCount;
 };
 
+const findAllPlaylists = async () => {
+  return Playlist.findAll({
+    include: {
+      model: User,
+      as: 'creator',
+      attributes: ['id', 'username']
+    },
+    order: [['date_created', 'DESC']] // Ordena pelas mais recentes
+  });
+};
 
 module.exports = {
   createPlaylist,
   findPlaylistById,
-  deletePlaylistById
+  deletePlaylistById,
+  findAllPlaylists
 };

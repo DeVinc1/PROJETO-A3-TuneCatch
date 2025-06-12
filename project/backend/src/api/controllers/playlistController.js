@@ -51,8 +51,18 @@ const deletePlaylist = async (req, res, next) => {
   }
 };
 
+const getAllPlaylists = async (req, res, next) => {
+  try {
+    const playlists = await playlistService.getAllPlaylists();
+    res.status(200).json({ playlists });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
-  deletePlaylist
+  deletePlaylist,
+  getAllPlaylists
 };
