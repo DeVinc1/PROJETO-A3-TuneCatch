@@ -3,12 +3,17 @@ const playlistController = require('../controllers/playlistController');
 
 const router = express.Router();
 
-
 /**
  * @Route   GET /playlist
  * @Desc    Busca todas as playlists do sistema.
  */
 router.get('/playlist', playlistController.getAllPlaylists);
+
+/**
+ * @Route   GET /publica/:nome
+ * @Desc    Busca playlists públicas por nome.
+ */
+router.get('/playlist/publica/:nome', playlistController.searchPublicPlaylists);
 
 /**
  * @Route   GET /playlist/:id_playlist

@@ -1,4 +1,5 @@
 const { Playlist, User } = require('../models');
+const { Op } = require('sequelize');
 
 const createPlaylist = async (playlistData) => {
   const playlist = await Playlist.create(playlistData);
@@ -40,9 +41,27 @@ const findAllPlaylists = async () => {
   });
 };
 
+const findPublicPlaylistsByName = async (nameQuery) => {
+  return Playlist.findAll({
+    where: {
+      isVisible: true,
+      name: {
+        [Op.iLike]: `%${nameQuery}%` 
+      }
+    },
+    include: {
+      model: User,
+      as: 'creator',
+      attributes: ['id', 'username', 'displayName']
+    },
+    order: [['likes', 'DESC']] 
+  });
+};
+
 module.exports = {
   createPlaylist,
   findPlaylistById,
   deletePlaylistById,
-  findAllPlaylists
+  findAllPlaylists,
+  findPublicPlaylistsByName
 };

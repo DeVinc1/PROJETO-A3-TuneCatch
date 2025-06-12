@@ -66,11 +66,20 @@ const getPlaylistById = async (playlistId) => {
   return playlist;
 };
 
+const searchPublicPlaylists = async (searchQuery) => {
+  if (!searchQuery) {
+    return []; 
+  }
+  return await playlistRepository.findPublicPlaylistsByName(searchQuery);
+};
+
+
 
 module.exports = {
   createNewPlaylist,
   updatePlaylistDetails,
   deletePlaylist,
   getAllPlaylists,
-  getPlaylistById
+  getPlaylistById,
+  searchPublicPlaylists
 };

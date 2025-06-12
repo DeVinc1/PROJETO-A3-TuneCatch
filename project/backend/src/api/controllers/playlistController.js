@@ -71,10 +71,21 @@ const getPlaylistById = async (req, res, next) => {
   }
 };
 
+const searchPublicPlaylists = async (req, res, next) => {
+    try {
+        const { nome } = req.params;
+        const playlists = await playlistService.searchPublicPlaylists(nome);
+        res.status(200).json({ playlists });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
   deletePlaylist,
   getAllPlaylists,
-  getPlaylistById
+  getPlaylistById,
+  searchPublicPlaylists
 };
