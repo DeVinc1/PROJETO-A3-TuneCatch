@@ -28,7 +28,7 @@ const handleSequelizeValidationError = (err) => {
 const handleSequelizeUniqueConstraintError = (err) => {
     const conflictField = Object.keys(err.fields)[0];
     const message = `O campo ${conflictField} já está em uso.`;
-    return newAppError(message, 409, conflictField);
+    return new AppError(message, 409, conflictField);
 
 };
 

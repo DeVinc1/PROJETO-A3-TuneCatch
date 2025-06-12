@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
         tableName: 'user_badge',
         timestamps: true,
         createdAt: 'granted_at',
-        updatedAt: 'false', 
+        updatedAt: false, 
     });
     return UserBadge;
 }
