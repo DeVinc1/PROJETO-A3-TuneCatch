@@ -100,6 +100,27 @@ const updateUserPlaylistLikeVisibility = async (userId, playlistId, isVisible) =
     return affectedRows;
 };
 
+const findLikedPlaylistsByUserId = async (userId) => {
+  const user = await User.findByPk(userId, {
+    attributes: ['id', 'username'], 
+   
+    include: {
+      model: Playlist,
+      as: 'likedPlaylists',
+      
+      include: {
+        model: User,
+        as: 'creator',
+        attributes: ['id', 'username']
+      },
+
+      through: {
+        attributes: ['likeVisibleOnProfile', 'liked_at']
+      }
+    }
+  });
+  return user;
+};
 
 module.exports = {
   createPlaylist,
@@ -109,5 +130,6 @@ module.exports = {
   findPublicPlaylistsByName,
   findAllByCreatorId,
   findPublicPlaylistsByCreatorId,
-  updateUserPlaylistLikeVisibility
+  updateUserPlaylistLikeVisibility,
+  findLikedPlaylistsByUserId
 };

@@ -133,6 +133,16 @@ const setLikeVisibility = async (req, res, next) => {
     }
 };
 
+const getLikedPlaylists = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const likedPlaylists = await playlistService.getLikedPlaylistsForUser(id_usuario);
+        res.status(200).json({ likedPlaylists });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = {
   createPlaylist,
@@ -144,5 +154,6 @@ module.exports = {
   getPlaylistsByCreator,
   getPublicPlaylistsByCreator,
   toggleLike,
-  setLikeVisibility
+  setLikeVisibility,
+  getLikedPlaylists
 };

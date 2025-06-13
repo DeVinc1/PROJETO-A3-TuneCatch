@@ -34,6 +34,11 @@ router.get('/playlist/usuario/:id_usuario', playlistController.getPlaylistsByCre
  */
 router.get('/playlist/:id_playlist', playlistController.getPlaylistById);
 
+/**
+ * @Route   GET maestro/playlist/curtidas/:id_usuario
+ * @Desc    Busca todas as playlists curtidas de um usuãrio.
+ */
+router.get('/playlist/curtidas/:id_usuario', playlistController.getLikedPlaylists); 
 
 /**
  * @Route   POST maestro/playlist/curtir/visibilidade/:id_usuario
