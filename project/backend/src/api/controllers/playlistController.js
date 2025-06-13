@@ -143,6 +143,15 @@ const getLikedPlaylists = async (req, res, next) => {
     }
 };
 
+const getPublicLikedPlaylists = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const publicLikedPlaylists = await playlistService.getPublicLikedPlaylistsForUser(id_usuario);
+        res.status(200).json({ publicLikedPlaylists });
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
   createPlaylist,
@@ -155,5 +164,6 @@ module.exports = {
   getPublicPlaylistsByCreator,
   toggleLike,
   setLikeVisibility,
-  getLikedPlaylists
+  getLikedPlaylists,
+  getPublicLikedPlaylists,
 };

@@ -28,17 +28,24 @@ router.get('/playlist/usuario-publicas/:id_usuario', playlistController.getPubli
  */
 router.get('/playlist/usuario/:id_usuario', playlistController.getPlaylistsByCreator);
 
-/**
- * @Route   GET maestro/playlist/:id_playlist
- * @Desc    Busca uma playlist específica pelo seu ID.
- */
-router.get('/playlist/:id_playlist', playlistController.getPlaylistById);
 
 /**
  * @Route   GET maestro/playlist/curtidas/:id_usuario
  * @Desc    Busca todas as playlists curtidas de um usuãrio.
  */
 router.get('/playlist/curtidas/:id_usuario', playlistController.getLikedPlaylists); 
+
+/**
+ * @Route   GET maestro/playlist/curtidas-publicas/:id_usuario
+ * @Desc    Busca as playlists curtidas de um usuãrio.
+ */
+router.get('/playlist/curtidas-publicas/:id_usuario', playlistController.getPublicLikedPlaylists);
+
+/**
+ * @Route   GET maestro/playlist/:id_playlist
+ * @Desc    Busca uma playlist específica pelo seu ID.
+ */
+router.get('/playlist/:id_playlist', playlistController.getPlaylistById);
 
 /**
  * @Route   POST maestro/playlist/curtir/visibilidade/:id_usuario

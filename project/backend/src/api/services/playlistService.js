@@ -148,6 +148,19 @@ const getLikedPlaylistsForUser = async (userId) => {
   return user.likedPlaylists || []; 
 };
 
+const getPublicLikedPlaylistsForUser = async (userId) => {
+    const user = await playlistRepository.findLikedPlaylistsByUserId(userId);
+    if (!user) {
+        throw new AppError('Utilizador não encontrado.', 404);
+    }
+
+    const publicLikedPlaylists = user.likedPlaylists.filter(playlist => 
+        playlist.UserPlaylistLiked.likeVisibleOnProfile === true
+    );
+
+    return publicLikedPlaylists || [];
+};
+
 module.exports = {
   createNewPlaylist,
   updatePlaylistDetails,
@@ -159,5 +172,6 @@ module.exports = {
   getPublicPlaylistsByCreator,
   togglePlaylistLike,
   setLikeVisibility,
-  getLikedPlaylistsForUser
+  getLikedPlaylistsForUser,
+  getPublicLikedPlaylistsForUser,
 };
