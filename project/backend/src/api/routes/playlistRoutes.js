@@ -52,5 +52,10 @@ router.put('/playlist/:id_playlist', playlistController.updatePlaylist);
  */
 router.delete('/playlist/:id_playlist', playlistController.deletePlaylist);
 
+/**
+ * @Route   POST maestro/playlist/curtir/:id_usuario
+ * @Desc    Permite que um usuário curta ou descurta uma playlist.
+ */
+router.post('/playlist/curtir/:id_usuario', playlistController.toggleLike);
 
 module.exports = router;

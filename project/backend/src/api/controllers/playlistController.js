@@ -101,6 +101,22 @@ const getPublicPlaylistsByCreator = async (req, res, next) => {
     }
 };
 
+const toggleLike = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const { playlistId } = req.body;
+
+        if (!playlistId) {
+            throw new AppError('O ID da playlist é obrigatório.', 400);
+        }
+
+        const result = await playlistService.togglePlaylistLike(id_usuario, playlistId);
+        res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
@@ -109,5 +125,6 @@ module.exports = {
   getPlaylistById,
   searchPublicPlaylists,
   getPlaylistsByCreator,
-  getPublicPlaylistsByCreator
+  getPublicPlaylistsByCreator,
+  toggleLike
 };

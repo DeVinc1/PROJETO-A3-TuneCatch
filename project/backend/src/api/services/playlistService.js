@@ -91,6 +91,44 @@ const getPublicPlaylistsByCreator = async (creatorId) => {
   return await playlistRepository.findPublicPlaylistsByCreatorId(creatorId);
 };
 
+const togglePlaylistLike = async (userId, playlistId) => {
+    const user = await userRepository.findUserById(userId);
+    if (!user) {
+        throw new AppError('Utilizador não encontrado.', 404);
+    }
+
+    const playlist = await playlistRepository.findPlaylistById(playlistId);
+    if (!playlist) {
+        throw new AppError('Playlist não encontrada.', 404);
+    }
+
+    if (playlist.creatorId == userId) {
+        throw new AppError('Não é possível curtir a própria playlist.', 409);
+    }
+
+    const hasLiked = await user.hasLikedPlaylists(playlist);
+
+    let message;
+
+    if (hasLiked) {
+        await user.removeLikedPlaylists(playlist);
+        playlist.likes -= 1;
+        message = 'Like removido com sucesso.';
+    } else {
+        await user.addLikedPlaylists(playlist);
+        playlist.likes += 1;
+        message = 'Playlist curtida com sucesso.';
+    }
+
+    await playlist.save();
+
+    return {
+        message,
+        newLikeCount: playlist.likes,
+    };
+};
+
+
 module.exports = {
   createNewPlaylist,
   updatePlaylistDetails,
@@ -99,5 +137,6 @@ module.exports = {
   getPlaylistById,
   searchPublicPlaylists,
   getPlaylistsByCreator,
-  getPublicPlaylistsByCreator
+  getPublicPlaylistsByCreator,
+  togglePlaylistLike
 };
