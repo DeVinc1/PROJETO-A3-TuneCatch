@@ -1,4 +1,4 @@
-const { Playlist, User } = require('../models');
+const { Playlist, User, UserPlaylistLiked } = require('../models');
 const { Op } = require('sequelize');
 
 const createPlaylist = async (playlistData) => {
@@ -87,6 +87,19 @@ const findPublicPlaylistsByCreatorId = async (userId) => {
     });
 };
 
+const updateUserPlaylistLikeVisibility = async (userId, playlistId, isVisible) => {
+    const [affectedRows] = await UserPlaylistLiked.update(
+        { likeVisibleOnProfile: isVisible },
+        {
+            where: {
+                user_id: userId,
+                playlist_id: playlistId,
+            },
+        }
+    );
+    return affectedRows;
+};
+
 
 module.exports = {
   createPlaylist,
@@ -95,5 +108,6 @@ module.exports = {
   findAllPlaylists,
   findPublicPlaylistsByName,
   findAllByCreatorId,
-  findPublicPlaylistsByCreatorId
+  findPublicPlaylistsByCreatorId,
+  updateUserPlaylistLikeVisibility
 };

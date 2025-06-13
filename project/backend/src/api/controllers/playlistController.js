@@ -117,6 +117,23 @@ const toggleLike = async (req, res, next) => {
     }
 };
 
+const setLikeVisibility = async (req, res, next) => {
+    try {
+        const { id_usuario } = req.params;
+        const { playlistId, isVisible } = req.body;
+
+        if (!playlistId) {
+            throw new AppError('O ID da playlist é obrigatório.', 400);
+        }
+
+        await playlistService.setLikeVisibility(id_usuario, playlistId, isVisible);
+        res.status(200).json({ message: 'Visibilidade da curtida atualizada com sucesso!' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 module.exports = {
   createPlaylist,
   updatePlaylist,
@@ -126,5 +143,6 @@ module.exports = {
   searchPublicPlaylists,
   getPlaylistsByCreator,
   getPublicPlaylistsByCreator,
-  toggleLike
+  toggleLike,
+  setLikeVisibility
 };

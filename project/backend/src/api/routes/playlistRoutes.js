@@ -34,6 +34,13 @@ router.get('/playlist/usuario/:id_usuario', playlistController.getPlaylistsByCre
  */
 router.get('/playlist/:id_playlist', playlistController.getPlaylistById);
 
+
+/**
+ * @Route   POST maestro/playlist/curtir/visibilidade/:id_usuario
+ * @Desc    Permite alterar o estado de visibilidade de uma curtida em uma playlist.
+ */
+router.post('/playlist/curtir/alterar-visibilidade/:id_usuario', playlistController.setLikeVisibility);
+
 /**
  * @Route   POST maestro/playlist/:id_usuario
  * @Desc    Cria uma nova playlist para um utilizador.

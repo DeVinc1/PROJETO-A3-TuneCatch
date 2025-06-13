@@ -128,6 +128,17 @@ const togglePlaylistLike = async (userId, playlistId) => {
     };
 };
 
+const setLikeVisibility = async (userId, playlistId, isVisible) => {
+    if (typeof isVisible !== 'boolean') {
+        throw new AppError('O campo "isVisible" é obrigatório e deve ser um booleano (true/false).', 400);
+    }
+    
+    const affectedRows = await playlistRepository.updateUserPlaylistLikeVisibility(userId, playlistId, isVisible);
+
+    if (affectedRows === 0) {
+        throw new AppError('A curtida especificada não foi encontrada para este usuário.', 404);
+    }
+};
 
 module.exports = {
   createNewPlaylist,
@@ -138,5 +149,6 @@ module.exports = {
   searchPublicPlaylists,
   getPlaylistsByCreator,
   getPublicPlaylistsByCreator,
-  togglePlaylistLike
+  togglePlaylistLike,
+  setLikeVisibility
 };
