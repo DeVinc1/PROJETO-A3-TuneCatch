@@ -82,6 +82,17 @@ const findPlaylistsByTagNames = async (tagNames) => {
     return playlists;
 };
 
+const findPlaylistTags = async (playlistId) => {
+    const playlist = await Playlist.findByPk(playlistId, {
+        include: {
+            model: Tags,
+            as: 'tags',
+            through: { attributes: [] }
+        }
+    });
+    return playlist;
+};
+
 module.exports = {
   createTag,
   findTagByName,
@@ -90,6 +101,7 @@ module.exports = {
   findTagById,
   deleteTagById,
   findPlaylistWithTags,
-  findPlaylistsByTagNames
+  findPlaylistsByTagNames,
+  findPlaylistTags
 };
 

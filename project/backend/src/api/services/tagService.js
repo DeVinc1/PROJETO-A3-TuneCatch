@@ -126,6 +126,17 @@ const getPlaylistsByTags = async (tagQuery) => {
     return playlists;
 };
 
+const getTagsForPlaylist = async (playlistId) => {
+    const playlist = await tagRepository.findPlaylistWithTags(playlistId);
+
+    if (!playlist) {
+        throw new AppError('Playlist não encontrada.', 404);
+    }
+
+    return playlist.tags || []; 
+};
+
+
 module.exports = {
   createNewTag,
   getAllTags,
@@ -134,5 +145,6 @@ module.exports = {
   updateTag,
   deleteTag,
   toggleTagOnPlaylist,
-  getPlaylistsByTags
+  getPlaylistsByTags,
+  getTagsForPlaylist
 };

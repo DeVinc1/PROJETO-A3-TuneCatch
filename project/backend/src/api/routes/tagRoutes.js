@@ -16,6 +16,12 @@ router.get('/tag', tagController.getAllTags);
 router.get('/tag/playlists-marcadas', tagController.findPlaylistsByTags);
 
 /**
+ * @Route   GET maestro/playlists-tags/:id_playlist
+ * @Desc    Busca as tags de uma playlist específica.
+ */
+router.get('/tag/playlists-tags/:id_playlist', tagController.getPlaylistTags);
+
+/**
  * @Route   GET maestro/tag/:id
  * @Desc    Busca as tags do sistema pelo ID.
  */

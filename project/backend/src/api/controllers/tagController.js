@@ -94,6 +94,16 @@ const findPlaylistsByTags = async (req, res, next) => {
     }
 };
 
+const getPlaylistTags = async (req, res, next) => {
+    try {
+        const { id_playlist } = req.params;
+        const tags = await tagService.getTagsForPlaylist(id_playlist);
+        res.status(200).json({ tags });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createTag,
   getAllTags,
@@ -102,5 +112,6 @@ module.exports = {
   updateTag,
   deleteTag,
   toggleTagOnPlaylist,
-  findPlaylistsByTags
+  findPlaylistsByTags,
+  getPlaylistTags
 };
