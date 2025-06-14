@@ -39,4 +39,11 @@ router.put('/tag/:id', tagController.updateTag);
  */
 router.delete('/tag/:id', tagController.deleteTag);
 
+/**
+ * @Route   POST maestro/tag/adicionar/:id_playlist
+ * @Desc    Adiciona tags à uma playlist específica.
+ */
+router.post('/tag/adicionar/:id_playlist', tagController.toggleTagOnPlaylist);
+
+
 module.exports = router;

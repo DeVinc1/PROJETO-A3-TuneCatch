@@ -83,11 +83,40 @@ const deleteTag = async (tagId) => {
     }
 };
 
+const toggleTagOnPlaylist = async (playlistId, tagId) => {
+    const playlist = await tagRepository.findPlaylistWithTags(playlistId);
+    if (!playlist) {
+        throw new AppError('Playlist não encontrada.', 404);
+    }
+
+    const tag = await tagRepository.findTagById(tagId);
+    if (!tag) {
+        throw new AppError('Tag não encontrada.', 404);
+    }
+
+    const hasTag = await playlist.hasTags(tag);
+
+    let message;
+
+    if (hasTag) {
+        await playlist.removeTags(tag);
+        message = `A tag '${tag.name}' foi removida da playlist '${playlist.name}'.`;
+    } else {
+        await playlist.addTags(tag);
+        message = `A tag '${tag.name}' foi adicionada à playlist '${playlist.name}'.`;
+    }
+
+    const updatedPlaylist = await tagRepository.findPlaylistWithTags(playlistId);
+
+    return { message, playlist: updatedPlaylist };
+};
+
 module.exports = {
   createNewTag,
   getAllTags,
   searchTags,
   getTagById,
-  updateTag ,
-  deleteTag
+  updateTag,
+  deleteTag,
+  toggleTagOnPlaylist
 };

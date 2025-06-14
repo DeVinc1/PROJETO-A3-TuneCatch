@@ -1,4 +1,4 @@
-const { Tags } = require('../models');
+const { Playlist, Tags } = require('../models');
 const { Op } = require('sequelize');
 
 const createTag = async (tagData) => {
@@ -41,12 +41,23 @@ const deleteTagById = async (tagId) => {
     return deletedRowCount;
 };
 
+const findPlaylistWithTags = async (playlistId) => {
+    const playlist = await Playlist.findByPk(playlistId, {
+        include: {
+            model: Tags,
+            as: 'tags' // O 'as' que definimos na associação
+        }
+    });
+    return playlist;
+};
+
 module.exports = {
   createTag,
   findTagByName,
   findAllTags,
   searchTagsByName,
   findTagById,
-  deleteTagById
+  deleteTagById,
+  findPlaylistWithTags  
 };
 

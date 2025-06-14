@@ -67,11 +67,29 @@ const deleteTag = async (req, res, next) => {
     }
 };
 
+const toggleTagOnPlaylist = async (req, res, next) => {
+    try {
+        const { id_playlist } = req.params;
+        const { tagId } = req.body;
+
+        if (!tagId) {
+            throw new AppError('O ID da tag é obrigatório no corpo da requisição.', 400);
+        }
+
+        const result = await tagService.toggleTagOnPlaylist(id_playlist, tagId);
+        res.status(200).json(result);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createTag,
   getAllTags,
   searchTags,
   getTagById,
   updateTag,
-  deleteTag
+  deleteTag,
+  toggleTagOnPlaylist
 };
