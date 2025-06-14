@@ -10,6 +10,12 @@ const router = express.Router();
 router.get('/tag', tagController.getAllTags);
 
 /**
+ * @Route   GET maestro/tag/nome/:name
+ * @Desc    Busca tags do sistema pelo seu nome.
+ */
+router.get('/tag/nome/:name', tagController.searchTags);
+
+/**
  * @Route   POST maestro/tag
  * @Desc    Cria uma nova tag.
  */

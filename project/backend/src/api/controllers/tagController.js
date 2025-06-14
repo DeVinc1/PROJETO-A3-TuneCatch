@@ -1,4 +1,4 @@
-const { get } = require('../routes/tagRoutes');
+const { get, search } = require('../routes/tagRoutes');
 const tagService = require('../services/tagService');
 
 const createTag = async (req, res, next) => {
@@ -24,7 +24,18 @@ const getAllTags = async (req, res, next) => {
     }
 };
 
+const searchTags = async (req, res, next) => {
+    try {
+        const { name } = req.params;
+        const tags = await tagService.searchTags(name);
+        res.status(200).json({ tags });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
   createTag,
-  getAllTags
+  getAllTags,
+  searchTags
 };

@@ -27,8 +27,17 @@ const getAllTags = async () => {
     return await tagRepository.findAllTags();
 };
 
+const searchTags = async (searchQuery) => {
+    if (!searchQuery) {
+        return [];
+    }
+    const tags = await tagRepository.searchTagsByName(searchQuery);
+    return tags;
+};
+
 
 module.exports = {
   createNewTag,
-  getAllTags
+  getAllTags,
+  searchTags
 };

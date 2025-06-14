@@ -1,5 +1,5 @@
 const { Tags } = require('../models');
-const { get } = require('../routes/tagRoutes');
+const { Op } = require('sequelize');
 
 const createTag = async (tagData) => {
   const tag = await Tags.create(tagData);
@@ -18,9 +18,20 @@ const findAllTags = async () => {
     return tags;
 };
 
+const searchTagsByName = async (nameQuery) => {
+  return Tags.findAll({
+    where: {
+      name: {
+        [Op.iLike]: `%${nameQuery}%` // iLike é case-insensitive, '%' busca por correspondência parcial
+      }
+    },
+    order: [['name', 'ASC']]
+  });
+};
+
 module.exports = {
   createTag,
   findTagByName,
   findAllTags,
-
+  searchTagsByName
 };
