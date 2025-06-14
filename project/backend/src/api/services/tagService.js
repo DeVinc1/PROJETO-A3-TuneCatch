@@ -9,7 +9,7 @@ const createNewTag = async (tagDetails) => {
     throw new AppError('Nome, categoria e ícone emoji são obrigatórios.', 400);
   }
 
-  const allowedCategories = ['Vibe', 'Ocasião', 'Gênero Musical'];
+  const allowedCategories = ['Vibe', 'Ocasião', 'Gênero Musical', 'Época'];
   if (!allowedCategories.includes(category)) {
     throw new AppError(`A categoria '${category}' é inválida. As categorias permitidas são: ${allowedCategories.join(', ')}.`, 400);
   }
@@ -55,7 +55,7 @@ const updateTag = async (tagId, updateData) => {
         throw new AppError('Tag não encontrada.', 404);
     }
 
-    const allowedCategories = ['Vibe', 'Ocasião', 'Gênero Musical'];
+    const allowedCategories = ['Vibe', 'Ocasião', 'Gênero Musical', 'Época'];
     if (!allowedCategories.includes(category)) {
         throw new AppError(`A categoria '${category}' é inválida. As categorias permitidas são: ${allowedCategories.join(', ')}.`, 400);
     }
