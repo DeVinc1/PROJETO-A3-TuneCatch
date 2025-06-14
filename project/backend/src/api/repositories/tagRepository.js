@@ -29,9 +29,16 @@ const searchTagsByName = async (nameQuery) => {
   });
 };
 
+const findTagById = async (id) => {
+    const tag = await Tags.findByPk(id);
+    return tag;
+};
+
 module.exports = {
   createTag,
   findTagByName,
   findAllTags,
-  searchTagsByName
+  searchTagsByName,
+  findTagById
 };
+

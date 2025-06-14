@@ -34,8 +34,34 @@ const searchTags = async (req, res, next) => {
     }
 };
 
+const getTagById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const tag = await tagService.getTagById(id);
+        res.status(200).json(tag);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const updateTag = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const updatedTag = await tagService.updateTag(id, req.body);
+        res.status(200).json({
+            message: 'Tag atualizada com sucesso!',
+            tag: updatedTag
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 module.exports = {
   createTag,
   getAllTags,
-  searchTags
+  searchTags,
+  getTagById,
+  updateTag
 };

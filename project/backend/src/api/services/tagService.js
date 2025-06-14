@@ -35,9 +35,51 @@ const searchTags = async (searchQuery) => {
     return tags;
 };
 
+const getTagById = async (tagId) => {
+    const tag = await tagRepository.findTagById(tagId);
+    if (!tag) {
+        throw new AppError('Tag não encontrada.', 404);
+    }
+    return tag;
+};
+
+const updateTag = async (tagId, updateData) => {
+    const { name, category, iconEmoji } = updateData;
+
+    if (!name || !category || !iconEmoji) {
+        throw new AppError('Todos os campos (name, category, iconEmoji) são obrigatórios para a edição.', 400);
+    }
+
+    const tag = await tagRepository.findTagById(tagId);
+    if (!tag) {
+        throw new AppError('Tag não encontrada.', 404);
+    }
+
+    const allowedCategories = ['Vibe', 'Ocasião', 'Gênero Musical'];
+    if (!allowedCategories.includes(category)) {
+        throw new AppError(`A categoria '${category}' é inválida. As categorias permitidas são: ${allowedCategories.join(', ')}.`, 400);
+    }
+
+    if (name !== tag.name) {
+        const existingTag = await tagRepository.findTagByName(name);
+        if (existingTag) {
+            throw new AppError('Esse nome de tag já existe no sistema!', 409);
+        }
+    }
+
+    tag.name = name;
+    tag.category = category;
+    tag.iconEmoji = iconEmoji;
+    await tag.save();
+
+    return tag;
+};
+
 
 module.exports = {
   createNewTag,
   getAllTags,
-  searchTags
+  searchTags,
+  getTagById,
+  updateTag 
 };
