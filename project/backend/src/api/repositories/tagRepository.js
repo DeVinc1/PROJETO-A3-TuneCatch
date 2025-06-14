@@ -1,4 +1,4 @@
-const { Playlist, Tags } = require('../models');
+const { Tags, Playlist, User, sequelize } = require('../models');
 const { Op } = require('sequelize');
 
 const createTag = async (tagData) => {
@@ -51,6 +51,37 @@ const findPlaylistWithTags = async (playlistId) => {
     return playlist;
 };
 
+const findPlaylistsByTagNames = async (tagNames) => {
+    if (!tagNames || tagNames.length === 0) {
+        return [];
+    }
+
+    const playlists = await Playlist.findAll({
+        include: [
+            {
+                model: Tags,
+                as: 'tags',
+                where: {
+                    name: {
+                        [Op.in]: tagNames
+                    }
+                },
+                attributes: [], 
+                through: { attributes: [] }
+            },
+            {
+                model: User,
+                as: 'creator',
+                attributes: ['id', 'username', 'displayName']
+            }
+        ],
+        group: ['Playlist.id', 'creator.id'],
+        having: sequelize.literal(`COUNT(DISTINCT "tags"."id") = ${tagNames.length}`)
+    });
+
+    return playlists;
+};
+
 module.exports = {
   createTag,
   findTagByName,
@@ -58,6 +89,7 @@ module.exports = {
   searchTagsByName,
   findTagById,
   deleteTagById,
-  findPlaylistWithTags  
+  findPlaylistWithTags,
+  findPlaylistsByTagNames
 };
 

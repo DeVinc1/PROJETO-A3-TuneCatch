@@ -111,6 +111,21 @@ const toggleTagOnPlaylist = async (playlistId, tagId) => {
     return { message, playlist: updatedPlaylist };
 };
 
+const getPlaylistsByTags = async (tagQuery) => {
+    if (!tagQuery) {
+        return [];
+    }
+
+    const tagNames = tagQuery.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+    if (tagNames.length === 0) {
+        return [];
+    }
+    
+    const playlists = await tagRepository.findPlaylistsByTagNames(tagNames);
+    return playlists;
+};
+
 module.exports = {
   createNewTag,
   getAllTags,
@@ -118,5 +133,6 @@ module.exports = {
   getTagById,
   updateTag,
   deleteTag,
-  toggleTagOnPlaylist
+  toggleTagOnPlaylist,
+  getPlaylistsByTags
 };

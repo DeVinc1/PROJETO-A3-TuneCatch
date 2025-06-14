@@ -10,6 +10,12 @@ const router = express.Router();
 router.get('/tag', tagController.getAllTags);
 
 /**
+ * @Route   GET maestro/playlists-marcadas?q=tag1,tag2
+ * @Desc    Busca todas as playlists marcadas com tags.
+ */
+router.get('/tag/playlists-marcadas', tagController.findPlaylistsByTags);
+
+/**
  * @Route   GET maestro/tag/:id
  * @Desc    Busca as tags do sistema pelo ID.
  */
@@ -44,6 +50,7 @@ router.delete('/tag/:id', tagController.deleteTag);
  * @Desc    Adiciona tags à uma playlist específica.
  */
 router.post('/tag/adicionar/:id_playlist', tagController.toggleTagOnPlaylist);
+
 
 
 module.exports = router;
