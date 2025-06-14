@@ -34,11 +34,19 @@ const findTagById = async (id) => {
     return tag;
 };
 
+const deleteTagById = async (tagId) => {
+    const deletedRowCount = await Tags.destroy({
+        where: { id: tagId },
+    });
+    return deletedRowCount;
+};
+
 module.exports = {
   createTag,
   findTagByName,
   findAllTags,
   searchTagsByName,
-  findTagById
+  findTagById,
+  deleteTagById
 };
 

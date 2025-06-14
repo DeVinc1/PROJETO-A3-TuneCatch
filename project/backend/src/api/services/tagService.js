@@ -75,11 +75,19 @@ const updateTag = async (tagId, updateData) => {
     return tag;
 };
 
+const deleteTag = async (tagId) => {
+    const result = await tagRepository.deleteTagById(tagId);
+
+    if (result === 0) {
+        throw new AppError('A tag a ser excluída não foi encontrada.', 404);
+    }
+};
 
 module.exports = {
   createNewTag,
   getAllTags,
   searchTags,
   getTagById,
-  updateTag 
+  updateTag ,
+  deleteTag
 };

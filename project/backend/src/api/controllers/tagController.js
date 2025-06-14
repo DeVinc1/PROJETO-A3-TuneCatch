@@ -57,11 +57,21 @@ const updateTag = async (req, res, next) => {
     }
 };
 
+const deleteTag = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        await tagService.deleteTag(id);
+        res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
   createTag,
   getAllTags,
   searchTags,
   getTagById,
-  updateTag
+  updateTag,
+  deleteTag
 };

@@ -33,5 +33,10 @@ router.post('/tag', tagController.createTag);
  */
 router.put('/tag/:id', tagController.updateTag);
 
+/**
+ * @Route   DELETE maestro/tag/:id
+ * @Desc    Deleta uma tag existente.
+ */
+router.delete('/tag/:id', tagController.deleteTag);
 
 module.exports = router;
