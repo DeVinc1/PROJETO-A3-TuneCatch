@@ -1,5 +1,6 @@
 const tagRepository = require('../repositories/tagRepository');
 const { AppError } = require('../../utils/errorUtils');
+const { get } = require('../routes/tagRoutes');
 
 const createNewTag = async (tagDetails) => {
   const { name, category, iconEmoji } = tagDetails;
@@ -22,6 +23,12 @@ const createNewTag = async (tagDetails) => {
   return newTag;
 };
 
+const getAllTags = async () => {
+    return await tagRepository.findAllTags();
+};
+
+
 module.exports = {
   createNewTag,
+  getAllTags
 };

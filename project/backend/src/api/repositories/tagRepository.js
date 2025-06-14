@@ -1,4 +1,5 @@
 const { Tags } = require('../models');
+const { get } = require('../routes/tagRoutes');
 
 const createTag = async (tagData) => {
   const tag = await Tags.create(tagData);
@@ -10,7 +11,16 @@ const findTagByName = async (name) => {
   return tag;
 };
 
+const findAllTags = async () => {
+    const tags = await Tags.findAll({
+        order: [['category', 'ASC'], ['name', 'ASC']] 
+    });
+    return tags;
+};
+
 module.exports = {
   createTag,
   findTagByName,
+  findAllTags,
+
 };
