@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaLock } from 'react-icons/fa'; 
+import { FaUser, FaLock } from 'react-icons/fa'; 
 import { useAuth } from '../contexts/AuthContext.jsx'; 
 
 function LoginPage() {
@@ -9,7 +9,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false); 
   const [formError, setFormError] = useState(null); 
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF9F9] p-4 font-poppins">
       <div
-        className="bg-[#FFF3F3] p-8 rounded-lg shadow-xl w-full max-w-md border-2 border-[#AF204E] transform transition-all duration-300 ease-in-out hover:scale-[1.01]"
+        className="bg-[#FFF3F3] p-10 rounded-lg shadow-xl w-full max-w-lg border-2 border-[#AF204E]"
         style={{ fontFamily: 'Poppins, sans-serif' }}
       >
         <h2 className="text-4xl font-bold text-center text-[#0F1108] mb-4">
@@ -60,12 +60,12 @@ function LoginPage() {
               Email ou Nome de Usuário:
             </label>
             <div className="flex items-center border-2 border-[#AF204E] rounded-lg focus-within:ring-2 focus-within:ring-blue-500">
-              <FaEnvelope className="text-[#AF204E] ml-4 mr-2" size={20} />
+              <FaUser className="text-[#AF204E] ml-4 mr-2" size={20} /> 
               <input
                 type="text"
                 id="credential"
                 className="appearance-none bg-[#FFF3F3] w-full py-3 px-2 text-[#0F1108] leading-tight focus:outline-none placeholder:text-[#76868C]"
-                placeholder="seuemail@exemplo.com ou seu_usuario"
+                placeholder="Seu email ou nome de usuário" 
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
                 required
@@ -83,7 +83,7 @@ function LoginPage() {
                 type="password"
                 id="password"
                 className="appearance-none bg-[#FFF3F3] w-full py-3 px-2 text-[#0F1108] leading-tight focus:outline-none placeholder:text-[#76868C]"
-                placeholder="******************"
+                placeholder="*************"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -94,17 +94,22 @@ function LoginPage() {
           <div className="flex items-center justify-center flex-col">
             <button
               type="submit"
-              className={`bg-[#AF204E] text-[#FFF9F9] font-bold py-3 px-8 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-red-800'}`}
+              className={`w-full bg-[#AF204E] text-[#FFF9F9] font-bold py-4 px-10 rounded-full focus:outline-none focus:shadow-outline
+              border-2 border-[#FFF9F9] shadow-[0px_0px_0px_3px_#AF204E]
+              transition duration-300 ease-in-out ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-red-800'}`}
               disabled={loading}
             >
               {loading ? 'Fazendo Login...' : 'Fazer Login'}
             </button>
-            <Link
-              to="/register"
-              className="inline-block align-baseline mt-4 text-[#AF204E] hover:text-red-800 transition duration-300 font-semibold text-base"
-            >
-              Não tem uma conta? Cadastre-se agora!
-            </Link>
+            <p className="inline-block align-baseline mt-4 text-[#0F1108] text-base">
+              Não tem uma conta?{' '}
+              <Link
+                to="/register"
+                className="font-bold text-[#AF204E] hover:text-red-800 transition duration-300"
+              >
+                Cadastre-se agora!
+              </Link>
+            </p>
           </div>
         </form>
       </div>
