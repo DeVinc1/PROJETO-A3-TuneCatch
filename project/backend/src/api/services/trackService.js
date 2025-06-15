@@ -46,9 +46,30 @@ const getTracksForPlaylist = async (playlistId) => {
 };
 
 
+const removeTrackFromPlaylist = async (playlistId, trackId) => {
+    const playlist = await playlistRepository.findPlaylistById(playlistId);
+    if (!playlist) {
+        throw new AppError('Playlist não encontrada.', 404);
+    }
+
+    const track = await trackRepository.findTrackById(trackId);
+    if (!track) {
+        throw new AppError('Música não encontrada.', 404);
+    }
+
+    await playlist.removeTracks(track);
+
+    const remainingPlaylists = await trackRepository.getPlaylistCountForTrack(track);
+
+    if (remainingPlaylists === 0) {
+        await trackRepository.deleteTrackById(trackId);
+    }
+};
+
 module.exports = {
   searchTracksByName,
   addTrackToPlaylist,
-  getTracksForPlaylist
+  getTracksForPlaylist,
+  removeTrackFromPlaylist
 };
 

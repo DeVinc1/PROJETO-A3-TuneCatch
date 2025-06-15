@@ -39,9 +39,20 @@ const getPlaylistTracks = async (req, res, next) => {
     }
 };
 
+const removeTrack = async (req, res, next) => {
+    try {
+        const { id_playlist, id_musica } = req.params;
+        await trackService.removeTrackFromPlaylist(id_playlist, id_musica);
+        res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = {
   search,
   addTrack,
-  getPlaylistTracks
+  getPlaylistTracks,
+  removeTrack
 };

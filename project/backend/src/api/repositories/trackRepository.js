@@ -25,8 +25,22 @@ const findPlaylistWithTracks = async (playlistId) => {
     return playlist;
 };
 
+const findTrackById = async (trackId) => {
+    return Track.findByPk(trackId);
+};
+
+const getPlaylistCountForTrack = async (trackInstance) => {
+    return trackInstance.countPlaylists();
+};
+
+const deleteTrackById = async (trackId) => {
+    await Track.destroy({ where: { id: trackId } });
+};
 
 module.exports = {
   findOrCreateTrack,
-  findPlaylistWithTracks
+  findPlaylistWithTracks,
+  findTrackById,
+  getPlaylistCountForTrack,
+  deleteTrackById
 };

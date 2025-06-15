@@ -22,5 +22,10 @@ router.post('/track/adicionar/:id_track', trackController.addTrack);
  */
 router.get('/track/playlist-musicas/:id_playlist', trackController.getPlaylistTracks);
 
+/**
+ * @Route   DELETE /track/:id_playlist/:id_musica
+ * @Desc    Remove uma música de uma playlist.
+ */
+router.delete('/track/:id_playlist/:id_musica', trackController.removeTrack);
 
 module.exports = router;
