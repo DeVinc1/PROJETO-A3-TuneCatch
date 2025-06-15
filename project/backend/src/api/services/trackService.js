@@ -66,10 +66,19 @@ const removeTrackFromPlaylist = async (playlistId, trackId) => {
     }
 };
 
+const getPlaylistsContainingTrack = async (trackName) => {
+    if (!trackName) {
+        return [];
+    }
+    return await trackRepository.findPlaylistsByExactTrackName(trackName);
+};
+
+
 module.exports = {
   searchTracksByName,
   addTrackToPlaylist,
   getTracksForPlaylist,
-  removeTrackFromPlaylist
+  removeTrackFromPlaylist,
+  getPlaylistsContainingTrack
 };
 

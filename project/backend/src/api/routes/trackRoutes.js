@@ -10,6 +10,12 @@ const router = express.Router();
 router.get('/track/pesquisa/:nome', trackController.search);
 
 /**
+ * @Route   GET /playlists-com-musica/:nome_musica
+ * @Desc    Obtém playlists que contêm uma música específica.
+ */
+router.get('/track/playlists-com-musica/:nome_musica', trackController.findPlaylistsByTrack);
+
+/**
  * @Route   POST /track/adicionar/:id_track
  * @Desc    Adiciona uma música a uma playlist.
  */
