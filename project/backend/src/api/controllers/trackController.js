@@ -1,5 +1,6 @@
 const trackService = require('../services/trackService');
 const { AppError } = require('../../utils/errorUtils');
+const { get } = require('../routes/trackRoutes');
 
 const search = async (req, res, next) => {
   try {
@@ -28,7 +29,19 @@ const addTrack = async (req, res, next) => {
     }
 };
 
+const getPlaylistTracks = async (req, res, next) => {
+    try {
+        const { id_playlist } = req.params;
+        const tracks = await trackService.getTracksForPlaylist(id_playlist);
+        res.status(200).json({ tracks });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 module.exports = {
   search,
-  addTrack
+  addTrack,
+  getPlaylistTracks
 };

@@ -8,10 +8,19 @@ const router = express.Router();
  * @Desc    Pesquisa por músicas na API do Spotify.
  */
 router.get('/track/pesquisa/:nome', trackController.search);
+
 /**
  * @Route   POST /track/adicionar/:id_track
  * @Desc    Adiciona uma música a uma playlist.
  */
 router.post('/track/adicionar/:id_track', trackController.addTrack);
+
+
+/** 
+ * @Route   GET /track/playlist-musicas/:id_playlist
+ * @Desc    Obtém as músicas de uma playlist.
+ */
+router.get('/track/playlist-musicas/:id_playlist', trackController.getPlaylistTracks);
+
 
 module.exports = router;

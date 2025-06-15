@@ -35,8 +35,20 @@ const addTrackToPlaylist = async (spotifyTrackId, playlistId) => {
   return { message: `A música '${track.trackName}' foi adicionada à playlist '${playlist.name}' com sucesso!` };
 };
 
+const getTracksForPlaylist = async (playlistId) => {
+    const playlist = await trackRepository.findPlaylistWithTracks(playlistId);
+
+    if (!playlist) {
+        throw new AppError('Playlist não encontrada.', 404);
+    }
+
+    return playlist.tracks || []; 
+};
+
+
 module.exports = {
   searchTracksByName,
-  addTrackToPlaylist
+  addTrackToPlaylist,
+  getTracksForPlaylist
 };
 
