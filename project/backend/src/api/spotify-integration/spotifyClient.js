@@ -83,6 +83,47 @@ const searchTracks = async (query) => {
   }
 };
 
+const getTrackDetails = async (trackId) => {
+  if (!accessToken) {
+    await getAccessToken();
+  }
+
+  try {
+    const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    const track = response.data;
+    const largeImage = track.album.images.find(img => img.width === 640) || track.album.images[0];
+
+ 
+    return {
+      spotifyID: track.id,
+      trackName: track.name,
+      artistName: track.artists.map(artist => artist.name).join(', '),
+      albumName: track.album.name,
+      albumCoverURL: largeImage ? largeImage.url : null,
+      durationMs: track.duration_ms,
+    };
+
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return null; 
+    }
+    if (error.response && error.response.status === 401) {
+      console.log('Token do Spotify expirado. A obter um novo e a tentar novamente...');
+      await getAccessToken();
+      return getTrackDetails(trackId);
+    }
+    console.error(`Erro ao buscar detalhes da música ${trackId} no Spotify:`, error.message);
+    throw new Error('Falha ao buscar detalhes da música no Spotify.');
+  }
+};
+
+
 module.exports = {
   searchTracks,
+  getTrackDetails, 
 };
