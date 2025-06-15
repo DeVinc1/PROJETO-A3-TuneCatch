@@ -1,11 +1,17 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const { sequelize } = require('./api/models');
 const { errorHandler } = require('./utils/errorUtils');
 const tagRoutes = require('./api/routes/tagRoutes');
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173', // Permita requisições apenas frontend vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+}));
 const PORT = process.env.TAG_PORT; 
 
 
