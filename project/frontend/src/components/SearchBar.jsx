@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaPlus } from 'react-icons/fa'; // Ícones de lupa e mais
+import { FaSearch, FaPlus } from 'react-icons/fa'; 
 
-// Importe suas instâncias do axios para as APIs de pesquisa
 import { userApi, playlistApi, tagApi, trackApi } from '../services/api.js';
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // Estados para armazenar as respostas completas das APIs
   const [usersResult, setUsersResult] = useState(null);
   const [playlistsResult, setPlaylistsResult] = useState(null);
   const [tagsResult, setTagsResult] = useState(null);
@@ -21,10 +19,8 @@ function SearchBar() {
       return;
     }
 
-    // Navega para a página de pesquisa geral
     navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
 
-    // Realiza as chamadas API e armazena os dados por inteiro
     try {
       console.log(`Pesquisando por: "${searchTerm}"`);
 
@@ -55,7 +51,6 @@ function SearchBar() {
 
   const handleCreatePlaylist = () => {
     console.log('Botão "+ criar playlist" clicado!');
-    // navigate('/create-playlist');
   };
 
   const handleKeyDown = (event) => {
@@ -65,9 +60,8 @@ function SearchBar() {
   };
 
   return (
-    // 'w-1/2' faz com que ocupe metade da largura disponível.
-    // O padding 'p-8' do container pai em App.jsx já cria o espaçamento da sidebar.
-    <div className="flex items-center bg-[#FFF9F9] p-4 rounded-lg shadow-sm w-1/2">
+
+    <div className="flex items-center bg-[#FFF9F9] p-4 rounded-lg w-1/2">
       {/* Campo de Pesquisa */}
       <div className="relative flex items-center flex-grow mr-4">
         <input
