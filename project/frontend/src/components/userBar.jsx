@@ -9,7 +9,7 @@ function UserBar() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-  D
+  
     if (isAuthenticated && userLoggedId) {
       const fetchUserData = async () => {
         setLoading(true);
@@ -55,18 +55,15 @@ function UserBar() {
   }
 
   return (
-
-    <div className="absolute top-4 right-4 flex items-center bg-[#FFF9F9] p-3 rounded-full z-10">
-      {/* Texto de saudação */}
+    // Mudado de 'absolute' para 'fixed' e adicionado 'z-20'
+    <div className="fixed top-4 right-4 flex items-center bg-[#FFF9F9] p-3 rounded-full z-20">
       <p className="text-[#0F1108] text-lg mr-3 flex-shrink-0">
-        <p>Olá,</p>
-         <span className="font-bold">{userData.username}</span>.
+        <p> Olá,</p> 
+        <span className="font-bold">{userData.username}</span>.
       </p>
-
-      
-      <div className="w-16 h-16 rounded-full overflow-hidden border-[3px] border-[#AF204E] flex-shrink-0">
+      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#AF204E] flex-shrink-0">
         <img
-          src={userData.avatarURL} 
+          src={userData.avatarURL || 'https://via.placeholder.com/64'}
           alt={`${userData.username}'s profile`}
           className="w-full h-full object-cover"
         />

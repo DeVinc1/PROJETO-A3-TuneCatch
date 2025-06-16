@@ -4,38 +4,67 @@ import AppRoutes from './routes/AppRoutes.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import SearchBar from './components/SearchBar.jsx';
 import UserBar from './components/userBar.jsx';
+import TopBackground from './components/TopBackground.jsx'; 
 
 function App() {
   const location = useLocation();
 
-  const noHeaderAndSidebarRoutes = ['/login', '/register', '/404'];
-  const shouldShowHeaderAndSidebar = !noHeaderAndSidebarRoutes.some(route =>
+ 
+  const noFixedElementsRoutes = ['/login', '/register', '/404'];
+  const shouldShowFixedElements = !noFixedElementsRoutes.some(route =>
     location.pathname.startsWith(route)
   ) && location.pathname !== '*';
 
-  const mainContainerClass = shouldShowHeaderAndSidebar ? 'ml-[271px]' : '';
+  const sidebarWidth = '271px'; // Largura da sidebar
+  const searchBarHeight = '80px'; // Altura estimada da SearchBar (h-12 + padding)
+  const userBarWidthEstimate = '200px'; // Estimativa da largura da UserBar para espaçamento
+
+
+  const topBgHeight = '100px'; 
 
   return (
     <div className="App flex min-h-screen bg-[#FFF9F9] relative">
-      {shouldShowHeaderAndSidebar && <Sidebar />}
+      {/* Top Background Fixo - Renderizado aqui, logo no início do App */}
+      {shouldShowFixedElements && <TopBackground height={topBgHeight} />}
 
-      <div className={`flex-grow flex flex-col p-8 ${mainContainerClass}`}>
-        {shouldShowHeaderAndSidebar && <SearchBar />}
-        {/*
-          Aqui, o 'main' agora terá classes condicionais:
-          - 'flex-grow' para ocupar o espaço restante.
-          - Se a sidebar/searchbar NÃO estiverem visíveis:
-            - 'flex items-center justify-center': para centralizar o conteúdo.
-            - 'h-full': para garantir que o 'main' ocupe a altura total do seu pai, permitindo a centralização.
-          - Se a sidebar/searchbar ESTIVEREM visíveis:
-            - 'pt-4': para dar um espaçamento superior da SearchBar.
-        */}
-        <main className={`flex-grow ${shouldShowHeaderAndSidebar ? 'pt-4' : 'flex items-center justify-center h-full'}`}>
-          <AppRoutes />
-        </main>
-      </div>
+      {/* Sidebar Fixa */}
+      {shouldShowFixedElements && <Sidebar />}
 
-      {shouldShowHeaderAndSidebar && <UserBar />}
+      {/* UserBar Fixa */}
+      {shouldShowFixedElements && <UserBar />}
+
+      {/* SearchBar Fixa - Posicionada entre a sidebar e a userbar */}
+      {shouldShowFixedElements && (
+        <div
+          className="fixed top-4 z-10"
+          style={{
+            left: `calc(${sidebarWidth} + 32px)`,
+            right: `calc(${userBarWidthEstimate} + 32px)`,
+            height: searchBarHeight,
+          }}
+        >
+          <SearchBar />
+        </div>
+      )}
+
+
+      <main
+        className={`flex-grow flex flex-col`}
+        style={{
+          paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
+          paddingTop: shouldShowFixedElements ? topBgHeight : '0px', // Usando topBgHeight para o padding superior
+          paddingRight: shouldShowFixedElements ? `calc(${userBarWidthEstimate} + 32px)` : '0px',
+          paddingBottom: shouldShowFixedElements ? '32px' : '0px',
+
+          display: !shouldShowFixedElements ? 'flex' : undefined,
+          alignItems: !shouldShowFixedElements ? 'center' : undefined,
+          justifyContent: !shouldShowFixedElements ? 'center' : undefined,
+          height: !shouldShowFixedElements ? '100%' : undefined,
+          width: !shouldShowFixedElements ? '100%' : undefined,
+        }}
+      >
+        <AppRoutes />
+      </main>
     </div>
   );
 }
