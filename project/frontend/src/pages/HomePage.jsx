@@ -64,7 +64,7 @@ function HomePage() {
       try {
         const response = await playlistApi.get('/');
         const visiblePlaylists = response.data.playlists.filter(pl => pl.isVisible);
-        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 12); // Pegando 6 playlists
+        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 12); 
         setPlaylists(selectedPlaylists);
         setLoadingPlaylists(false);
       } catch (err) {
@@ -147,7 +147,7 @@ function HomePage() {
       </div>
 
       {/* Seção de Playlists Aleatórias */}
-      <h2 className="text-2xl font-normal text-[#0F1108] mb-6">Essas playlists aqui estão te chamando</h2>
+      <h2 className="text-2xl font-normal text-[#0F1108] mb-6">Que tal ouvir essas aqui?</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-[12px] justify-items-start mb-12"> {/* Gap diminuído para 'gap-2', e adicionado mb-12 */}
         {loadingPlaylists ? (
           <p className="text-[#0F1108] text-lg col-span-full">Carregando playlists...</p>
