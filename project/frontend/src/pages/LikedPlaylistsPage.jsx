@@ -71,7 +71,7 @@ function LikedPlaylistsPage() {
             </button>
           ))
         ) : (
-          <p className="text-[#0F1108] text-lg col-span-full">Você ainda não curtiu nenhuma playlist.</p>
+          <p className="text-[#0F1108] text-lg col-span-full">Você ainda não curtiu nenhuma playlist... Vamo lá, tem alguma ai que vai te agradar - prometo!</p>
         )}
       </div>
     </div>
