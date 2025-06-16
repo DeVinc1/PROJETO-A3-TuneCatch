@@ -19,7 +19,7 @@ function App() {
   const sidebarWidth = '271px'; // Largura da sidebar
   const searchBarHeight = '80px'; // Altura estimada da SearchBar (h-12 + padding)
   const userBarWidthEstimate = '300px'; // Ainda usado para o 'right' da SearchBar, não para o padding do main
-  const topBgHeight = '100px';
+  const topBgHeight = '115px';
 
   return (
     <div className="App flex min-h-screen bg-[#FFF9F9] relative">

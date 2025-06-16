@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom'; // Importe useLocation
 import {
   FaHome,
   FaCompass,
@@ -17,7 +17,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [errorPlaylists, setErrorPlaylists] = useState(null);
-  const location = useLocation(); 
+  const location = useLocation(); // Obtenha o objeto de localização
 
   const mainMenuItems = [
     { name: 'Home', icon: FaHome, path: '/' },
@@ -27,11 +27,12 @@ function Sidebar() {
   ];
 
   useEffect(() => {
-  
-    if (isAuthenticated && userLoggedId) {
-      const fetchPlaylists = async () => {
+    // A função de busca de playlists
+    const fetchPlaylists = async () => {
+      setLoadingPlaylists(true); // Ativa loading ao iniciar a busca
+      setErrorPlaylists(null);   // Limpa erros anteriores
+      if (isAuthenticated && userLoggedId) {
         try {
-          // Endpoint: GET http://localhost:2200/maestro/playlist/usuario/{id_usuario}
           const response = await playlistApi.get(`/usuario/${userLoggedId}`);
           const fetchedPlaylists = response.data.playlists
             ? response.data.playlists.map(p => ({
@@ -47,10 +48,15 @@ function Sidebar() {
           setErrorPlaylists('Não foi possível carregar suas playlists.');
           setLoadingPlaylists(false);
         }
-      };
-      fetchPlaylists();
-    }
-  }, [userLoggedId, isAuthenticated]); 
+      } else {
+        // Se não estiver autenticado ou userLoggedId não disponível, limpa playlists
+        setPlaylists([]);
+        setLoadingPlaylists(false);
+      }
+    };
+
+    fetchPlaylists();
+  }, [userLoggedId, isAuthenticated, location.pathname]); // ADICIONADO location.pathname como dependência
 
   const noSidebarRoutes = ['/login', '/register', '/404']; 
   if (
@@ -62,7 +68,6 @@ function Sidebar() {
   ) {
     return null; 
   }
-
 
   const sidebarWidthClass = 'w-[271px]'; 
 
@@ -116,7 +121,6 @@ function Sidebar() {
                   className="flex items-center px-4 py-2 rounded-lg transition-all duration-300 text-[#0F1108]
                     hover:text-[#AF204E] hover:font-bold hover:shadow-md hover:shadow-[#AF204E]/30"
                 >
-                  {/* Usa playlist.coverImageURL e playlist.name */}
                   <img
                     src={playlist.coverImageURL || placeholderPlaylistImage} 
                     alt={playlist.name}

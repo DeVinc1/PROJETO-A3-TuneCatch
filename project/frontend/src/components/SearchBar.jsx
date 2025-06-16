@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaPlus, FaTimes } from 'react-icons/fa'; // Importe FaTimes para fechar o modal
-import { playlistApi } from '../services/api.js'; // Importe a API de playlist
-import { useAuth } from '../contexts/AuthContext.jsx'; // Importe o AuthContext para o ID do usuário logado
+import { FaSearch, FaPlus, FaTimes } from 'react-icons/fa';
+import { playlistApi, userApi, tagApi, trackApi } from '../services/api.js';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 function SearchBar() {
-    const { userLoggedId, isAuthenticated } = useAuth(); // Pega o ID do usuário logado
+    const { userLoggedId, isAuthenticated } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ function SearchBar() {
     const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false);
     const [newPlaylistName, setNewPlaylistName] = useState('');
     const [newPlaylistDescription, setNewPlaylistDescription] = useState('');
-    const [newPlaylistIsVisible, setNewPlaylistIsVisible] = useState(true); // Default true
+    const [newPlaylistIsVisible, setNewPlaylistIsVisible] = useState(true);
     const [newPlaylistCoverImageURL, setNewPlaylistCoverImageURL] = useState('');
     const [createFormLoading, setCreateFormLoading] = useState(false);
     const [createFormError, setCreateFormError] = useState(null);
@@ -33,7 +33,6 @@ function SearchBar() {
         }
         navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
 
-        // As chamadas de API de busca serão mantidas aqui, mas não são o foco principal desta task
         try {
             console.log(`Pesquisando por: "${searchTerm}"`);
             const usersResponse = await userApi.get(`/nome-exibicao?q=${encodeURIComponent(searchTerm)}`);
@@ -53,15 +52,14 @@ function SearchBar() {
         }
     };
 
-    // NOVO: Handlers para o Modal de Criação de Playlist
+    // Handlers para o Modal de Criação de Playlist
     const handleCreatePlaylistClick = () => {
         if (!isAuthenticated || !userLoggedId) {
-            alert('Você precisa estar logado para criar uma playlist.'); // Substituir por modal de notificação
+            alert('Você precisa estar logado para criar uma playlist.');
             navigate('/login');
             return;
         }
         setShowCreatePlaylistModal(true);
-        // Limpa os campos do formulário ao abrir
         setNewPlaylistName('');
         setNewPlaylistDescription('');
         setNewPlaylistIsVisible(true);
@@ -90,26 +88,28 @@ function SearchBar() {
             name: newPlaylistName,
             description: newPlaylistDescription,
             isVisible: newPlaylistIsVisible,
-            coverImageURL: newPlaylistCoverImageURL || "https://placehold.co/600x400/E0E0E0/787878?text=Nova+Playlist", // Placeholder se não houver URL
+            coverImageURL: newPlaylistCoverImageURL || "https://placehold.co/600x400/E0E0E0/787878?text=Nova+Playlist",
         };
 
         try {
-            // Endpoint: POST http://localhost:2200/maestro/playlist/{id_user_logado}
             const response = await playlistApi.post(`/${userLoggedId}`, payload);
-            console.log("Playlist criada com sucesso:", response.data);
-            setCreateFormSuccess("Playlist criada com sucesso!");
+            console.log("Resposta completa da API de criação de playlist:", response.data); // Log da resposta completa
 
-            // Atualiza a página inteira (navegando para a própria página de playlists do usuário ou home)
-            // Ou apenas recarregar os dados, se a página atual consumir playlists dinamicamente.
-            // Para atualizar a página inteira:
-            navigate(`/playlist/${response.data.id}`); // Redireciona para a playlist recém-criada
-            
-            // Ou se quiser apenas recarregar a página atual (não recomendado para criação):
-            // window.location.reload(); 
+            // CORREÇÃO AQUI: Acessar response.data.playlist.id
+            const createdPlaylistId = response.data.playlist?.id; 
 
-            setTimeout(() => {
-                handleCloseCreatePlaylistModal();
-            }, 1500);
+            if (createdPlaylistId) {
+                setCreateFormSuccess("Playlist criada com sucesso!");
+                // Redireciona para a playlist recém-criada
+                navigate(`/playlist/${createdPlaylistId}`); 
+                
+                setTimeout(() => {
+                    handleCloseCreatePlaylistModal();
+                }, 1500);
+            } else {
+                setCreateFormError("Erro: ID da playlist não encontrado na resposta.");
+                console.error("ID da playlist não encontrado em response.data.playlist.id");
+            }
 
         } catch (err) {
             console.error("Erro ao criar playlist:", err);
@@ -166,7 +166,7 @@ function SearchBar() {
 
             {/* Botão "+ criar playlist" */}
             <button
-                onClick={handleCreatePlaylistClick} // Chama a nova função para abrir o modal
+                onClick={handleCreatePlaylistClick}
                 className="flex items-center bg-[#AF204E] text-[#FFF3F3] font-bold py-3 px-6 rounded-full
                            border-2 border-[#FFF3F3] shadow-[0px_0px_0px_3px_#AF204E]
                            focus:outline-none focus:shadow-outline transition duration-300 ease-in-out
@@ -176,7 +176,7 @@ function SearchBar() {
                 <span>Criar nova playlist</span>
             </button>
 
-            {/* NOVO: Modal de Criar Playlist */}
+            {/* Modal de Criar Playlist */}
             {showCreatePlaylistModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
                     <div className="bg-[#FFF3F3] p-8 rounded-lg shadow-2xl border-2 border-[#AF204E] text-center w-full max-w-lg">
