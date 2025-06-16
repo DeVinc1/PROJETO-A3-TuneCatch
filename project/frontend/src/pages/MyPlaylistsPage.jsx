@@ -36,7 +36,7 @@ function MyPlaylistsPage() {
   }, [userLoggedId, isAuthenticated]); 
 
   const handleClickPlaylist = (playlistId) => {
-    navigate(`/playlist/${playlistId}`); /
+    navigate(`/playlist/${playlistId}`); 
   };
 
   return (
