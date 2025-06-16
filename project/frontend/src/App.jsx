@@ -1,29 +1,32 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom'; // Importe useLocation
+import { useLocation } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 import Sidebar from './components/Sidebar';
+import SearchBar from './components/SearchBar'; // Importe o componente SearchBar
 
 function App() {
-  const location = useLocation(); // Hook para obter a localização atual
+  const location = useLocation();
 
-  // Defina as rotas onde a Sidebar NÃO deve aparecer
   const noSidebarRoutes = ['/login', '/register', '/404'];
-
-  // Verifica se a rota atual está na lista de exclusão
-  // Usamos .startsWith para pegar rotas como /login/algumparametro
   const shouldShowSidebar = !noSidebarRoutes.some(route =>
     location.pathname.startsWith(route)
-  ) && location.pathname !== '*'; // Adiciona também a exclusão para a rota catch-all
+  ) && location.pathname !== '*';
 
-  // A classe ml-[271px] compensa a nova largura da sidebar
-  const mainContentClass = shouldShowSidebar ? 'ml-[271px]' : ''; // Aplica margem apenas se a sidebar for exibida
+  // A margem principal agora é aplicada ao container do conteúdo para alinhar com a sidebar
+  const mainContainerClass = shouldShowSidebar ? 'ml-[271px]' : '';
 
   return (
-    <div className="App flex">
-      {shouldShowSidebar && <Sidebar />} {/* Renderiza Sidebar condicionalmente */}
-      <main className={`flex-grow ${mainContentClass}`}>
-        <AppRoutes />
-      </main>
+    <div className="App flex min-h-screen bg-[#FFF9F9]"> {/* Adicione min-h-screen e bg-FFF9F9 aqui */}
+      {shouldShowSidebar && <Sidebar />}
+
+      {/* O conteúdo principal, agora com a SearchBar no topo */}
+      <div className={`flex-grow flex flex-col p-8 ${mainContainerClass}`}> {/* Adiciona padding e flex-col para organizar */}
+        {shouldShowSidebar && <SearchBar />} {/* Renderiza SearchBar condicionalmente junto com a Sidebar */}
+
+        <main className="flex-grow pt-4"> {/* Adiciona um padding-top para separar da SearchBar */}
+          <AppRoutes />
+        </main>
+      </div>
     </div>
   );
 }
