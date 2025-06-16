@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Importe a API de usuários
 import { tagApi, playlistApi, userApi } from '../services/api.js';
+import { useAuth } from '../contexts/AuthContext.jsx'; // Importe o AuthContext para pegar o ID do usuário logado
 
 // Função auxiliar para embaralhar um array (Fisher-Yates shuffle)
 function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
   }
-  return array;
+  return shuffledArray;
 }
 
 // Função auxiliar para obter a classe de cor com base na categoria
@@ -29,18 +31,19 @@ const getCategoryColorClass = (category) => {
 };
 
 function HomePage() {
+  const { userLoggedId } = useAuth(); // Pega o ID do usuário logado
   const [tags, setTags] = useState([]);
   const [playlists, setPlaylists] = useState([]);
-  const [users, setUsers] = useState([]); // Novo estado para usuários
+  const [users, setUsers] = useState([]);
   const [loadingTags, setLoadingTags] = useState(true);
   const [errorTags, setErrorTags] = useState(null);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [errorPlaylists, setErrorPlaylists] = useState(null);
-  const [loadingUsers, setLoadingUsers] = useState(true); // Novo estado de loading para usuários
-  const [errorUsers, setErrorUsers] = useState(null); // Novo estado de erro para usuários
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [errorUsers, setErrorUsers] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect para buscar Tags
+  // useEffect para buscar Tags (inalterado)
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -58,13 +61,13 @@ function HomePage() {
     fetchTags();
   }, []);
 
-  // useEffect para buscar Playlists
+  // useEffect para buscar Playlists (inalterado)
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
         const response = await playlistApi.get('/');
         const visiblePlaylists = response.data.playlists.filter(pl => pl.isVisible);
-        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 12); 
+        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 12);
         setPlaylists(selectedPlaylists);
         setLoadingPlaylists(false);
       } catch (err) {
@@ -77,13 +80,22 @@ function HomePage() {
     fetchPlaylists();
   }, []);
 
-  // Novo useEffect para buscar Usuários
+  // useEffect para buscar Usuários
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoadingUsers(true);
+      setErrorUsers(null);
       try {
-        const response = await userApi.get('/'); 
-        const allUsers = response.data.users || response.data; 
-        const selectedUsers = shuffleArray(allUsers).slice(0, 6); 
+        const response = await userApi.get('/');
+        const allUsers = response.data.users || response.data; // Adaptação caso a API retorne diretamente o array
+
+        // FILTRA O USUÁRIO LOGADO AQUI
+        const filteredUsers = userLoggedId
+          ? allUsers.filter(user => user.id !== userLoggedId)
+          : allUsers;
+
+        // Embaralha e pega até 6 usuários *após* a filtragem
+        const selectedUsers = shuffleArray(filteredUsers).slice(0, 6);
         setUsers(selectedUsers);
         setLoadingUsers(false);
       } catch (err) {
@@ -93,8 +105,11 @@ function HomePage() {
       }
     };
 
+    // Só busca usuários se o userLoggedId já estiver disponível, ou se não houver um logado (para pegar todos)
+    // Se userLoggedId for null (não logado), ele vai buscar e não filtrar ninguém.
+    // Se userLoggedId for um número, ele buscará e filtrará.
     fetchUsers();
-  }, []);
+  }, [userLoggedId]); // Dependência adicionada para re-executar quando userLoggedId muda
 
   const handleClickTag = async (tagName) => {
     navigate(`/search/tags/${encodeURIComponent(tagName)}`);
@@ -111,7 +126,7 @@ function HomePage() {
   };
 
   const handleClickUser = (userId) => {
-    navigate(`/users/${userId}`); // Redireciona para a página de perfil do usuário
+    navigate(`/users/${userId}`);
   };
 
   return (
@@ -130,7 +145,7 @@ function HomePage() {
               onClick={() => handleClickTag(tag.name)}
               className={`
                 ${getCategoryColorClass(tag.category)}
-                text-[#FFF9F9] font-normal text-base
+                text-[#FFF9F3] font-normal text-base
                 px-5 py-2.5 rounded-full shadow-md
                 transition duration-300 ease-in-out
                 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-opacity-75
@@ -148,7 +163,7 @@ function HomePage() {
 
       {/* Seção de Playlists Aleatórias */}
       <h2 className="text-2xl font-normal text-[#0F1108] mb-6">Que tal ouvir essas aqui?</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-[12px] justify-items-start mb-12"> {/* Gap diminuído para 'gap-2', e adicionado mb-12 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-[12px] justify-items-start mb-12">
         {loadingPlaylists ? (
           <p className="text-[#0F1108] text-lg col-span-full">Carregando playlists...</p>
         ) : errorPlaylists ? (
@@ -180,7 +195,7 @@ function HomePage() {
 
       {/* Nova Seção de Usuários Aleatórios */}
       <h2 className="text-2xl font-normal text-[#0F1108] mb-6">Que tal fazer novos amigos?</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-[12px] justify-items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 justify-items-start"> {/* Alterado xl:grid-cols-7 para xl:grid-cols-6 */}
         {loadingUsers ? (
           <p className="text-[#0F1108] text-lg col-span-full">Carregando usuários...</p>
         ) : errorUsers ? (
@@ -190,16 +205,16 @@ function HomePage() {
             <button
               key={user.id}
               onClick={() => handleClickUser(user.id)}
-              className="flex flex-col items-start text-left w-48 transition-transform duration-300 hover:scale-105" 
+              className="flex flex-col items-start text-left w-48 transition-transform duration-300 hover:scale-105"
             >
-              <div className="w-48 h-48 overflow-hidden rounded-full mb-2 shadow-md border-4 border-[#AF204E]"> 
+              <div className="w-48 h-48 overflow-hidden rounded-full mb-2 shadow-md border-4 border-[#AF204E]">
                 <img
-                  src={user.avatarURL} 
+                  src={user.avatarURL || 'https://placehold.co/192x192/E0E0E0/787878?text=Sem+Avatar'}
                   alt={user.username}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-[#0F1108] font-normal text-lg truncate w-full">@{user.username}</p> {/* Nome do usuário */}
+              <p className="text-[#0F1108] font-normal text-lg truncate w-full">@{user.username}</p>
             </button>
           ))
         ) : (
