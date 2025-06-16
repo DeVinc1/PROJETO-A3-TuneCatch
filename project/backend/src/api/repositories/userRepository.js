@@ -114,6 +114,15 @@ const deleteUserById = async (userId) => {
   return deletedRowCount;
 };
 
+const findAllUsers = async () => {
+    return User.findAll({
+        attributes: {
+            exclude: ['passwordHash', 'email', 'isAdmin', 'isBanned', 'date_updated']
+        },
+        order: [['date_created', 'ASC']]
+    });
+};
+
 module.exports = {
     createUser,
     findOneByEmail,
@@ -125,4 +134,5 @@ module.exports = {
     findUserAllInfo,
     findUserWithFollowing,
     deleteUserById,
+    findAllUsers
 }

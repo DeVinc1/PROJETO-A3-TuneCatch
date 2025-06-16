@@ -207,6 +207,11 @@ const deleteUser = async (userId) => {
   }
 };
 
+const getAllUsers = async () => {
+    return await userRepository.findAllUsers();
+};
+
+
 module.exports = {
   registerNewUser,
   loginUser,
@@ -218,4 +223,5 @@ module.exports = {
   toggleFollowUser,
   banUser,
   deleteUser,
+  getAllUsers
 };
