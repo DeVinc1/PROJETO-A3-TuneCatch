@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import { userApi } from '../services/api'; 
+import { useNavigate } from 'react-router-dom';
+import { userApi } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -10,7 +11,8 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
+  
   // Função de login
   const login = useCallback(async (credential, password) => {
     setLoading(true);
@@ -20,14 +22,14 @@ export const AuthProvider = ({ children }) => {
       console.log('Tentando login com:', { credential, password }); // DEBUG: Payload enviado
       console.log('Chamando endpoint:', userApi.defaults.baseURL + '/fazer-login'); // DEBUG: URL completa
       const response = await userApi.post('/fazer-login', { credential, password });
-      
+
       console.log('Resposta da API (sucesso):', response.data); // DEBUG: Resposta completa da API
-      
+
       const { idUserLogged, message } = response.data;
-      
+
       if (idUserLogged) {
         setUserLoggedId(idUserLogged);
-        localStorage.setItem('idUserLogged', idUserLogged.toString()); 
+        localStorage.setItem('idUserLogged', idUserLogged.toString());
         console.log(message); // "Login realizado com sucesso."
         return { success: true, message: message };
       } else {
@@ -52,9 +54,9 @@ export const AuthProvider = ({ children }) => {
     setUserLoggedId(null);
     localStorage.removeItem('idUserLogged');
     navigate('/login');
-  }, []);
+  }, [navigate]);
 
-   const authContextValue = {
+  const authContextValue = {
     userLoggedId,
     isAuthenticated: !!userLoggedId,
     loading,
