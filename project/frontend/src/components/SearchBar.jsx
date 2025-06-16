@@ -64,15 +64,14 @@ function SearchBar() {
     const gapPadding = '32px'; // Equivalente a p-8
 
     return (
-        // Adicionado 'fixed', 'top-4', 'left' e 'right' calculados, e 'z-10' para a ordem de empilhamento.
-        // O 'shadow-sm' foi mantido.
+
         <div
-            className="flex items-center bg-[#FFF9F9] p-4 rounded-lg shadow-sm z-10"
+            className="flex items-center bg-[#FFF9F9] p-4 rounded-lg z-10"
             style={{
-                position: 'fixed', // Torna o elemento fixo na tela
-                top: '16px', // Distância do topo, equivalente a 'top-4'
-                left: `calc(${sidebarWidth} + ${gapPadding})`, // Perto da sidebar + espaço
-                right: `calc(${userBarWidthEstimate} + ${gapPadding})`, // Respeita o espaço da UserBar
+                position: 'fixed', 
+                top: '16px', 
+                left: `calc(${sidebarWidth} + ${gapPadding})`,
+                right: `calc(${userBarWidthEstimate} + ${gapPadding})`, 
             }}
         >
             {/* Campo de Pesquisa */}
