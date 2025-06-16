@@ -1,10 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const { sequelize } = require('./api/models');
 const { errorHandler } = require('./utils/errorUtils'); 
 const userRoutes = require('./api/routes/userRoutes');
 
 const app = express();
+app.use(cors({
+  origin: 'http://localhost:5173', // Permita requisições apenas frontend vite
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+}));
 app.use(express.json());
 const PORT = process.env.USER_PORT;
 

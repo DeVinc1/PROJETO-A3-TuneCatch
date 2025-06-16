@@ -22,7 +22,7 @@ const createNewPlaylist = async (creatorId, playlistDetails) => {
     isVisible,
     coverImageURL: coverImageURL && coverImageURL.trim() !== ''
         ? coverImageURL
-        : 'https://example.com/default-cover.png', // TODO: Mudar para URL da imagem de capa padrão válida
+        : '../../../../frontend/src/assets/placeholder-playlist.png', 
   };
 
   const newPlaylist = await playlistRepository.createPlaylist(playlistData);

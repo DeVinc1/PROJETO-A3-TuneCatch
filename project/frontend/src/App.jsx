@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes.jsx';
+import Sidebar from './components/Sidebar.jsx';
+import SearchBar from './components/SearchBar.jsx';
+import UserBar from './components/UserBar.jsx';
+import TopBackground from './components/TopBackground.jsx'; // Importe o novo componente
 
 function App() {
-  const [count, setCount] = useState(0)
+  const location = useLocation();
+
+  // Rotas onde os elementos fixos (sidebar, searchbar, userbar, top background) NÃO devem aparecer
+  const noFixedElementsRoutes = ['/login', '/register', '/404'];
+  const shouldShowFixedElements = !noFixedElementsRoutes.some(route =>
+    location.pathname.startsWith(route)
+  ) && location.pathname !== '*';
+
+  // Definições de dimensões para cálculo de paddings
+  const sidebarWidth = '271px'; // Largura da sidebar
+  const searchBarHeight = '80px'; // Altura estimada da SearchBar (h-12 + padding)
+  const userBarWidthEstimate = '300px'; // Ainda usado para o 'right' da SearchBar, não para o padding do main
+  const topBgHeight = '115px';
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App flex min-h-screen bg-[#FFF9F9] relative">
+      {/* Top Background Fixo */}
+      {shouldShowFixedElements && <TopBackground height={topBgHeight} />}
+
+      {/* Sidebar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
+      {shouldShowFixedElements && <Sidebar className="z-30" />} {/* Adicionado z-30 */}
+
+      {/* UserBar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
+      {shouldShowFixedElements && <UserBar className="z-30" />} {/* Adicionado z-30 */}
+
+      {/* SearchBar Fixa - Z-index para SearchBar mais baixo que modais (z-50) */}
+      {shouldShowFixedElements && (
+        <div
+          className="fixed top-4 z-30" // Alterado z-10 para z-30
+          style={{
+            left: `calc(${sidebarWidth} + 32px)`,
+            right: `calc(${userBarWidthEstimate} + 32px)`,
+            height: searchBarHeight,
+          }}
+        >
+          <SearchBar />
+        </div>
+      )}
+
+      <main
+        className={`flex-grow flex flex-col`}
+        style={{
+          paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
+          paddingTop: shouldShowFixedElements ? topBgHeight : '0px',
+          paddingRight: shouldShowFixedElements ? '32px' : '0px',
+          paddingBottom: shouldShowFixedElements ? '32px' : '0px',
+
+          display: !shouldShowFixedElements ? 'flex' : undefined,
+          alignItems: !shouldShowFixedElements ? 'center' : undefined,
+          justifyContent: !shouldShowFixedElements ? 'center' : undefined,
+          height: !shouldShowFixedElements ? '100%' : undefined,
+          width: !shouldShowFixedElements ? '100%' : undefined,
+        }}
+      >
+        <AppRoutes />
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;

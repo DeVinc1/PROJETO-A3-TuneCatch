@@ -64,5 +64,10 @@ router.post('/usuario/banir-perfil/:id_usuario', userController.banUser);
  */
 router.delete('/usuario/:id_usuario', userController.deleteUser);
 
+/**
+ * @Route   GET /maestro/usuario
+ * @Desc    Obtém todos os usuários.
+ */
+router.get('/usuario', userController.getAllUsers);
 
 module.exports = router;
