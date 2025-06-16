@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
             validate: {
                 isUrl: true,
             },
-            defaultValue: 'https://example.com/default-avatar.png', //TODO - Mudar para URL do avatar padrão válida
+            defaultValue: '../../../../frontend/src/assets/placeholder-pfp.png', //TODO - Mudar para URL do avatar padrão válida
         },
         isBanned: {
             type: DataTypes.BOOLEAN,

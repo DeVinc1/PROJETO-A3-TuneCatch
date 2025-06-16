@@ -27,7 +27,7 @@ const registerNewUser = async ({ username, email, password, displayName, avatarU
     displayName: displayName,
     avatarURL: avatarURL && avatarURL.trim() !== ''
       ? avatarURL
-      : 'https://example.com/default-avatar.png', // TODO: Mudar para um link de avatar padrão real
+      : '../../../../frontend/src/assets/placeholder-pfp.png', 
   };
 
   const newUser = await userRepository.createUser(newUserData);

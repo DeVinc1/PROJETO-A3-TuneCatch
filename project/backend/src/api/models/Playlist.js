@@ -45,7 +45,7 @@ module.exports = (sequelize) => {
             validate: {
                 isUrl: true,
             },
-            defaultValue: 'https://example.com/default-cover.png', //TODO - Mudar para URL da imagem de capa padrão válida
+            defaultValue: '../../../../frontend/src/assets/placeholder-playlist.png', //TODO - Mudar para URL da imagem de capa padrão válida
         },
     }, {
         tableName: 'playlists',
