@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom'; 
 
 import HomePage from '../pages/HomePage.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
@@ -40,8 +40,11 @@ function AppRoutes() {
       <Route path="/playlist/:playlistId" element={<PlaylistPage />} /> \
       <Route path="/playlists-from/:id" element={<PlaylistsFromUser />} />
 
-      {/* Rota 404 (catch-all para qualquer caminho não definido) */}
-      <Route path="*" element={<NotFoundPage />} />
+      {/* Rota 404 (página real do 404) */}
+      <Route path="/404" element={<NotFoundPage />} />
+
+      {/* Catch-all para qualquer caminho não definido: REDIRECIONA para /404 */}
+      <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
 }
