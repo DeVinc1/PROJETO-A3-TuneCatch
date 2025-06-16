@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaImage, FaUserCircle } from 'react-icons/fa'; 
-import { userApi } from '../services/api'; 
+import { FaUser, FaEnvelope, FaLock, FaImage, FaUserCircle } from 'react-icons/fa';
+import { userApi } from '../services/api.js'; 
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -11,7 +11,7 @@ function RegisterPage() {
   const [avatarURL, setAvatarURL] = useState('');
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null); 
+  const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -25,21 +25,18 @@ function RegisterPage() {
         username,
         email,
         password,
- 
         ...(displayName && { displayName }),
         ...(avatarURL && { avatarURL }),
       };
 
       console.log('Tentando cadastrar com payload:', payload);
-      console.log('Chamando endpoint:', userApi.defaults.baseURL); 
+      console.log('Chamando endpoint:', userApi.defaults.baseURL);
 
- 
       const response = await userApi.post('/', payload);
-      
+
       console.log('Cadastro bem-sucedido:', response.data);
       setSuccessMessage('Cadastro realizado com sucesso! Você já pode fazer login.');
-      
-     
+
       setUsername('');
       setEmail('');
       setDisplayName('');
@@ -65,7 +62,8 @@ function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF9F9] p-4 font-poppins">
+
+    <div className="flex flex-col items-center justify-center w-full h-full font-poppins">
       <div
         className="bg-[#FFF3F3] p-10 rounded-lg shadow-xl w-full max-w-lg border-2 border-[#AF204E]"
         style={{ fontFamily: 'Poppins, sans-serif' }}
@@ -175,7 +173,7 @@ function RegisterPage() {
             <div className="flex items-center border-2 border-[#AF204E] rounded-lg focus-within:ring-2 focus-within:ring-blue-500">
               <FaImage className="text-[#AF204E] ml-4 mr-2" size={20} />
               <input
-                type="url" 
+                type="url"
                 id="avatarURL"
                 className="appearance-none bg-[#FFF3F3] w-full py-3 px-2 text-[#0F1108] leading-tight focus:outline-none placeholder:text-[#76868C]"
                 placeholder="http://exemplo.com/sua-foto.jpg"

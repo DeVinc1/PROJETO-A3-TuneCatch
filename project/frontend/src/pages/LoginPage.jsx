@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaLock } from 'react-icons/fa'; 
-import { useAuth } from '../contexts/AuthContext.jsx'; 
+import { FaUser, FaLock } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 function LoginPage() {
-  const [credential, setCredential] = useState(''); 
+  const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); 
-  const [formError, setFormError] = useState(null); 
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState(null);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setFormError(null); 
+    setFormError(null);
 
     try {
       const result = await login(credential, password);
@@ -22,11 +22,9 @@ function LoginPage() {
       if (result.success) {
         navigate('/');
       } else {
-
         setFormError(result.message || 'Credenciais inválidas.');
       }
     } catch (err) {
-
       console.error("Erro inesperado no handleSubmit da LoginPage:", err);
       setFormError('Ocorreu um erro inesperado. Tente novamente.');
     } finally {
@@ -35,7 +33,8 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF9F9] p-4 font-poppins">
+    // Removido 'min-h-screen' daqui. O 'main' em App.jsx já gerencia a altura da tela.
+    <div className="flex flex-col items-center justify-center bg-[#FFF9F9] p-4 font-poppins">
       <div
         className="bg-[#FFF3F3] p-10 rounded-lg shadow-xl w-full max-w-lg border-2 border-[#AF204E]"
         style={{ fontFamily: 'Poppins, sans-serif' }}
@@ -60,12 +59,12 @@ function LoginPage() {
               Email ou Nome de Usuário:
             </label>
             <div className="flex items-center border-2 border-[#AF204E] rounded-lg focus-within:ring-2 focus-within:ring-blue-500">
-              <FaUser className="text-[#AF204E] ml-4 mr-2" size={20} /> 
+              <FaUser className="text-[#AF204E] ml-4 mr-2" size={20} />
               <input
                 type="text"
                 id="credential"
                 className="appearance-none bg-[#FFF3F3] w-full py-3 px-2 text-[#0F1108] leading-tight focus:outline-none placeholder:text-[#76868C]"
-                placeholder="Seu email ou nome de usuário" 
+                placeholder="Seu email ou nome de usuário"
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
                 required
