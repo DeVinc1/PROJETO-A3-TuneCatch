@@ -650,7 +650,7 @@ function PlaylistPage() {
           ))}
         </div>
       ) : (
-        <p className="text-[#0F1108] text-lg col-span-full mt-8 text-[#76868C]">
+        <p className="text-lg col-span-full mt-8 text-[#76868C]">
           Tá um silêncio por aqui, não acha?
         </p>
       )}
