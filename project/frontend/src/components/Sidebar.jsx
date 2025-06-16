@@ -7,17 +7,18 @@ import {
   FaUser,
   FaArrowRight,
 } from 'react-icons/fa'; // Ícones
-import { playlistApi } from '../services/api'; 
-import { useAuth } from '../contexts/AuthContext'; 
+import { playlistApi } from '../services/api';
+import { useAuth } from '../contexts/AuthContext'; // Importe useAuth
 import logo from '../assets/Logo - Red.png';
 import placeholderPlaylistImage from '../assets/placeholder-playlist.png'; 
 
 function Sidebar() {
-  const { userLoggedId, isAuthenticated } = useAuth(); 
+  // NOVO: Obtenha triggerSidebarPlaylistRefresh do useAuth
+  const { userLoggedId, isAuthenticated, triggerSidebarPlaylistRefresh } = useAuth(); 
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [errorPlaylists, setErrorPlaylists] = useState(null);
-  const location = useLocation(); 
+  const location = useLocation();
 
   const mainMenuItems = [
     { name: 'Home', icon: FaHome, path: '/' },
@@ -27,30 +28,38 @@ function Sidebar() {
   ];
 
   useEffect(() => {
-  
-    if (isAuthenticated && userLoggedId) {
-      const fetchPlaylists = async () => {
+    const fetchMyPlaylists = async () => {
+      setLoadingPlaylists(true);
+      setErrorPlaylists(null);
+      if (isAuthenticated && userLoggedId) {
         try {
-          // Endpoint: GET http://localhost:2200/maestro/playlist/usuario/{id_usuario}
           const response = await playlistApi.get(`/usuario/${userLoggedId}`);
           const fetchedPlaylists = response.data.playlists
             ? response.data.playlists.map(p => ({
                 id: p.id,
                 name: p.name,
                 coverImageURL: p.coverImageURL,
-              })).slice(0, 5) // Limita a exibição a 5 componentes
+              })).slice(0, 5)
             : [];
-          setPlaylists(fetchedPlaylists); 
+          setPlaylists(fetchedPlaylists);
           setLoadingPlaylists(false);
         } catch (err) {
           console.error('Erro ao buscar playlists:', err);
           setErrorPlaylists('Não foi possível carregar suas playlists.');
           setLoadingPlaylists(false);
         }
-      };
-      fetchPlaylists();
-    }
-  }, [userLoggedId, isAuthenticated]); 
+      } else {
+        setPlaylists([]);
+        setLoadingPlaylists(false);
+      }
+    };
+
+    // Este useEffect será disparado por:
+    // - Mudanças no userLoggedId ou isAuthenticated (login/logout)
+    // - Mudanças em location.pathname (navegação entre rotas)
+    // - Mudanças em triggerSidebarPlaylistRefresh (sinal de atualização de playlists de outros componentes)
+    fetchMyPlaylists();
+  }, [userLoggedId, isAuthenticated, location.pathname, triggerSidebarPlaylistRefresh]); // ADICIONADO triggerSidebarPlaylistRefresh
 
   const noSidebarRoutes = ['/login', '/register', '/404']; 
   if (
@@ -62,7 +71,6 @@ function Sidebar() {
   ) {
     return null; 
   }
-
 
   const sidebarWidthClass = 'w-[271px]'; 
 
@@ -116,13 +124,12 @@ function Sidebar() {
                   className="flex items-center px-4 py-2 rounded-lg transition-all duration-300 text-[#0F1108]
                     hover:text-[#AF204E] hover:font-bold hover:shadow-md hover:shadow-[#AF204E]/30"
                 >
-                  {/* Usa playlist.coverImageURL e playlist.name */}
                   <img
                     src={playlist.coverImageURL || placeholderPlaylistImage} 
                     alt={playlist.name}
                     className="w-16 h-16 rounded-md object-cover mr-3" 
                   />
-                  <span className="text-md truncate">{playlist.name}</span> {/* Truncate para nomes longos */}
+                  <span className="text-md truncate">{playlist.name}</span>
                 </NavLink>
               </li>
             ))}

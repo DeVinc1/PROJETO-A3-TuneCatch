@@ -65,7 +65,8 @@ function GeneralSearchPage() {
     try {
       // Realiza todas as chamadas API em paralelo
       const [usersResponse, playlistsResponse, tagsResponse, tracksResponse] = await Promise.allSettled([
-        userApi.get(`/nome-exibicao?q=${encodeURIComponent(query)}`),
+        // CORREÇÃO AQUI: Alterado o endpoint userApi para 'nome-usuario'
+        userApi.get(`/nome-usuario/${encodeURIComponent(query)}`),
         playlistApi.get(`/publica/${encodeURIComponent(query)}`),
         tagApi.get(`/nome/${encodeURIComponent(query)}`),
         trackApi.get(`/playlists-com-musica/${encodeURIComponent(query)}`),
@@ -73,7 +74,12 @@ function GeneralSearchPage() {
 
       // Processa a resposta de Usuários
       if (usersResponse.status === 'fulfilled' && usersResponse.value.data) {
-        setUsers(usersResponse.value.data.users || usersResponse.value.data);
+        // A API de usuário por nome de usuário retorna o objeto do usuário direto, não um array 'users'
+        // Portanto, se houver um usuário, ele estará diretamente em response.value.data
+        // Se a busca retornar um único objeto de usuário, ou um array de usuários (se o backend for flexível)
+        // Adaptamos para ter certeza que é um array para o map
+        const userData = usersResponse.value.data;
+        setUsers(userData ? (Array.isArray(userData) ? userData : [userData]) : []); // Garante que seja um array
       } else {
         console.error('Erro ou falha na busca de usuários:', usersResponse.reason);
         setUsers([]);
