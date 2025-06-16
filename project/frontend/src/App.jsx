@@ -35,39 +35,32 @@ function App() {
       {/* SearchBar Fixa - Posicionada entre a sidebar e a userbar */}
       {shouldShowFixedElements && (
         <div
-          className="fixed top-4 z-10" // z-10 para ficar acima do background, mas abaixo da UserBar se for o caso
+          className="fixed top-4 z-10" 
           style={{
-            left: `calc(${sidebarWidth} + 32px)`, // 32px de padding padrão para o conteúdo principal
-            right: `calc(${userBarWidthEstimate} + 32px)`, // O espaço à direita da SearchBar ainda respeita a UserBar
-            height: searchBarHeight, // Define a altura do container fixo da SearchBar
+            left: `calc(${sidebarWidth} + 32px)`, 
+            right: `calc(${userBarWidthEstimate} + 32px)`, 
+            height: searchBarHeight, 
           }}
         >
-          <SearchBar /> {/* A SearchBar em si preenche 100% deste container fixo */}
+          <SearchBar />
         </div>
       )}
 
-      {/*
-        Área de Conteúdo Principal (main):
-        Agora ela terá um padding direito menor ou nulo, permitindo que o conteúdo se estenda.
-      */}
+
       <main
-        className={`flex-grow flex flex-col`} // Sempre flex-grow para ocupar o resto do espaço
+        className={`flex-grow flex flex-col`} 
         style={{
-          // Paddings para compensar elementos fixos
+        
           paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
           paddingTop: shouldShowFixedElements ? topBgHeight : '0px',
-          // REMOVIDO o paddingRight que usava userBarWidthEstimate.
-          // Agora, o paddingRight será apenas o padrão ou zero, permitindo que o conteúdo
-          // se estenda para debaixo da UserBar.
-          paddingRight: shouldShowFixedElements ? '32px' : '0px', // Um padding padrão para a direita se houver elementos fixos
-          paddingBottom: shouldShowFixedElements ? '32px' : '0px', // Padding inferior padrão
-
-          // Centralização para páginas como Login/Register/404 (quando não há elementos fixos)
+          
+          paddingRight: shouldShowFixedElements ? '32px' : '0px',
+          paddingBottom: shouldShowFixedElements ? '32px' : '0px',
           display: !shouldShowFixedElements ? 'flex' : undefined,
           alignItems: !shouldShowFixedElements ? 'center' : undefined,
           justifyContent: !shouldShowFixedElements ? 'center' : undefined,
-          height: !shouldShowFixedElements ? '100%' : undefined, // Garante altura total para centralização
-          width: !shouldShowFixedElements ? '100%' : undefined,   // Garante largura total para centralização
+          height: !shouldShowFixedElements ? '100%' : undefined, 
+          width: !shouldShowFixedElements ? '100%' : undefined,   
         }}
       >
         <AppRoutes />

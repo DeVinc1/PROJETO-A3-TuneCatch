@@ -112,15 +112,15 @@ function Sidebar() {
             {playlists.map((playlist) => (
               <li key={playlist.id} className="mb-2">
                 <NavLink
-                  to={`/playlist/${playlist.id}`} // Supondo que a rota da playlist seja /playlist/:id
+                  to={`/playlist/${playlist.id}`} 
                   className="flex items-center px-4 py-2 rounded-lg transition-all duration-300 text-[#0F1108]
                     hover:text-[#AF204E] hover:font-bold hover:shadow-md hover:shadow-[#AF204E]/30"
                 >
                   {/* Usa playlist.coverImageURL e playlist.name */}
                   <img
-                    src={playlist.coverImageURL || placeholderPlaylistImage} // Imagem placeholder
+                    src={playlist.coverImageURL || placeholderPlaylistImage} 
                     alt={playlist.name}
-                    className="w-16 h-16 rounded-md object-cover mr-3" // Tamanho da imagem aumentado (w-16 h-16)
+                    className="w-16 h-16 rounded-md object-cover mr-3" 
                   />
                   <span className="text-md truncate">{playlist.name}</span> {/* Truncate para nomes longos */}
                 </NavLink>
