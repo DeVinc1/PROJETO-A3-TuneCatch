@@ -16,6 +16,7 @@ import SearchByTagPage from '../pages/SearchByTagPage.jsx';
 import SearchByUsernamePage from '../pages/SearchByUsernamePage.jsx'; 
 import SearchByPlaylistNamePage from '../pages/SearchByPlaylistNamePage.jsx';
 import SearchTracksInPlaylistPage from '../pages/SearchTracksInPlaylistPage.jsx'; 
+import PlaylistsFromUser from '../pages/PlaylistsFromUser.jsx'; 
 
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 
@@ -42,6 +43,7 @@ function AppRoutes() {
       {/* Rotas com Parâmetros Dinâmicos */}
       <Route path="/users/:userId" element={<UserProfilePage />} /> 
       <Route path="/playlist/:playlistId" element={<PlaylistPage />} /> \
+      <Route path="/playlists-from/:id" element={<PlaylistsFromUser />} />
 
       {/* Rota para buscar playlists que possuam uma música */}
       <Route path="/playlist/search-tracks/:trackName" element={<SearchTracksInPlaylistPage />} />
