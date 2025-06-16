@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import SearchBar from './components/SearchBar.jsx';
-import UserBar from './components/userBar.jsx';
+import UserBar from './components/UserBar.jsx';
 import TopBackground from './components/TopBackground.jsx'; // Importe o novo componente
 
 function App() {
@@ -26,41 +26,39 @@ function App() {
       {/* Top Background Fixo */}
       {shouldShowFixedElements && <TopBackground height={topBgHeight} />}
 
-      {/* Sidebar Fixa */}
-      {shouldShowFixedElements && <Sidebar />}
+      {/* Sidebar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
+      {shouldShowFixedElements && <Sidebar className="z-30" />} {/* Adicionado z-30 */}
 
-      {/* UserBar Fixa */}
-      {shouldShowFixedElements && <UserBar />}
+      {/* UserBar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
+      {shouldShowFixedElements && <UserBar className="z-30" />} {/* Adicionado z-30 */}
 
-      {/* SearchBar Fixa - Posicionada entre a sidebar e a userbar */}
+      {/* SearchBar Fixa - Z-index para SearchBar mais baixo que modais (z-50) */}
       {shouldShowFixedElements && (
         <div
-          className="fixed top-4 z-10" 
+          className="fixed top-4 z-30" // Alterado z-10 para z-30
           style={{
-            left: `calc(${sidebarWidth} + 32px)`, 
-            right: `calc(${userBarWidthEstimate} + 32px)`, 
-            height: searchBarHeight, 
+            left: `calc(${sidebarWidth} + 32px)`,
+            right: `calc(${userBarWidthEstimate} + 32px)`,
+            height: searchBarHeight,
           }}
         >
           <SearchBar />
         </div>
       )}
 
-
       <main
-        className={`flex-grow flex flex-col`} 
+        className={`flex-grow flex flex-col`}
         style={{
-        
           paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
           paddingTop: shouldShowFixedElements ? topBgHeight : '0px',
-          
           paddingRight: shouldShowFixedElements ? '32px' : '0px',
           paddingBottom: shouldShowFixedElements ? '32px' : '0px',
+
           display: !shouldShowFixedElements ? 'flex' : undefined,
           alignItems: !shouldShowFixedElements ? 'center' : undefined,
           justifyContent: !shouldShowFixedElements ? 'center' : undefined,
-          height: !shouldShowFixedElements ? '100%' : undefined, 
-          width: !shouldShowFixedElements ? '100%' : undefined,   
+          height: !shouldShowFixedElements ? '100%' : undefined,
+          width: !shouldShowFixedElements ? '100%' : undefined,
         }}
       >
         <AppRoutes />
