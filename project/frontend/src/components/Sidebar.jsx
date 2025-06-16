@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom'; // Importe useLocation
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   FaHome,
   FaCompass,
@@ -17,7 +17,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [errorPlaylists, setErrorPlaylists] = useState(null);
-  const location = useLocation(); // Obtenha o objeto de localização
+  const location = useLocation(); 
 
   const mainMenuItems = [
     { name: 'Home', icon: FaHome, path: '/' },
@@ -27,12 +27,11 @@ function Sidebar() {
   ];
 
   useEffect(() => {
-    // A função de busca de playlists
-    const fetchPlaylists = async () => {
-      setLoadingPlaylists(true); // Ativa loading ao iniciar a busca
-      setErrorPlaylists(null);   // Limpa erros anteriores
-      if (isAuthenticated && userLoggedId) {
+  
+    if (isAuthenticated && userLoggedId) {
+      const fetchPlaylists = async () => {
         try {
+          // Endpoint: GET http://localhost:2200/maestro/playlist/usuario/{id_usuario}
           const response = await playlistApi.get(`/usuario/${userLoggedId}`);
           const fetchedPlaylists = response.data.playlists
             ? response.data.playlists.map(p => ({
@@ -48,15 +47,10 @@ function Sidebar() {
           setErrorPlaylists('Não foi possível carregar suas playlists.');
           setLoadingPlaylists(false);
         }
-      } else {
-        // Se não estiver autenticado ou userLoggedId não disponível, limpa playlists
-        setPlaylists([]);
-        setLoadingPlaylists(false);
-      }
-    };
-
-    fetchPlaylists();
-  }, [userLoggedId, isAuthenticated, location.pathname]); // ADICIONADO location.pathname como dependência
+      };
+      fetchPlaylists();
+    }
+  }, [userLoggedId, isAuthenticated]); 
 
   const noSidebarRoutes = ['/login', '/register', '/404']; 
   if (
@@ -69,12 +63,13 @@ function Sidebar() {
     return null; 
   }
 
+
   const sidebarWidthClass = 'w-[271px]'; 
 
   return (
     <aside className={`${sidebarWidthClass} bg-[#FFF9F9] h-full flex flex-col p-4 border-r border-gray-200 shadow-lg fixed top-0 left-0`}>
       <div className="flex items-center mb-8 px-4 py-2">
-        <img src={ logo } alt="TuneCatch Logo" className="h-10 w-auto mr-2" />
+        <img src={ logo } alt="TuneCatch Logo" className="h-[60px] w-auto mr-2" />
         <h1 className="text-2xl font-bold text-[#AF204E]">TuneCatch</h1>
       </div>
 
@@ -121,6 +116,7 @@ function Sidebar() {
                   className="flex items-center px-4 py-2 rounded-lg transition-all duration-300 text-[#0F1108]
                     hover:text-[#AF204E] hover:font-bold hover:shadow-md hover:shadow-[#AF204E]/30"
                 >
+                  {/* Usa playlist.coverImageURL e playlist.name */}
                   <img
                     src={playlist.coverImageURL || placeholderPlaylistImage} 
                     alt={playlist.name}

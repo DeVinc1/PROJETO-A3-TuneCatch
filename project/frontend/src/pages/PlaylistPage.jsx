@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { playlistApi, userApi, tagApi, trackApi } from '../services/api.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
-import { FaPlus, FaCheck, FaSearch, FaTimes, FaPencilAlt, FaHeart } from 'react-icons/fa'; // Importar FaHeart para o botão de curtir
+import { usePlayer } from '../contexts/PlayerContext.jsx'; // NOVO: Importe o usePlayer
+import { FaPlus, FaCheck, FaSearch, FaTimes, FaPencilAlt, FaHeart } from 'react-icons/fa';
 
 // Função para obter a classe de cor com base na categoria da tag
 const getCategoryColorClass = (category) => {
@@ -30,6 +31,8 @@ const formatDuration = (ms) => {
 function PlaylistPage() {
   const { playlistId } = useParams();
   const { userLoggedId, isAuthenticated } = useAuth();
+  const { playTrack, selectedTrackId } = usePlayer(); // NOVO: Obtenha playTrack e selectedTrackId do PlayerContext
+
   const [playlistData, setPlaylistData] = useState(null);
   const [creatorAvatar, setCreatorAvatar] = useState(null);
   const [playlistTags, setPlaylistTags] = useState([]); // Tags atualmente na playlist
@@ -70,11 +73,10 @@ function PlaylistPage() {
   const [errorAvailableTags, setErrorAvailableTags] = useState(null);
   const [addingTagId, setAddingTagId] = useState(null);
 
-  // NOVO: Estados para o botão de curtir/descurtir
+  // Estados para o botão de curtir/descurtir
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [likeError, setLikeError] = useState(null);
-  // Para rastrear as playlists curtidas pelo usuário logado e determinar o 'isLiked'
   const [loggedInUserLikedPlaylists, setLoggedInUserLikedPlaylists] = useState([]);
 
 
@@ -136,14 +138,14 @@ function PlaylistPage() {
     }
   }, [playlistId]);
 
-  // NOVO: Função para buscar as playlists curtidas pelo usuário logado
+  // Função para buscar as playlists curtidas pelo usuário logado
   const fetchLoggedInUserLikedPlaylists = useCallback(async () => {
     if (!isAuthenticated || !userLoggedId) {
       setLoggedInUserLikedPlaylists([]);
       return;
     }
     try {
-      const response = await userApi.get(`/${userLoggedId}`); // Endpoint do perfil do usuário logado
+      const response = await userApi.get(`/${userLoggedId}`);
       setLoggedInUserLikedPlaylists(response.data.likedPlaylists || []);
     } catch (err) {
       console.error("Erro ao buscar playlists curtidas do usuário logado:", err);
@@ -160,17 +162,15 @@ function PlaylistPage() {
     }
   }, [playlistId, fetchData]);
 
-  // NOVO: useEffect para determinar se a playlist atual é curtida pelo usuário logado
   useEffect(() => {
     if (loggedInUserLikedPlaylists.length > 0 && playlistData) {
       const isPlaylistCurrentlyLiked = loggedInUserLikedPlaylists.some(pl => pl.id === playlistData.id);
       setIsLiked(isPlaylistCurrentlyLiked);
-    } else if (loggedInUserLikedPlaylists.length === 0 && playlistData) { // Se a lista de curtidas estiver vazia, não está curtida
+    } else if (loggedInUserLikedPlaylists.length === 0 && playlistData) {
         setIsLiked(false);
     }
   }, [loggedInUserLikedPlaylists, playlistData]);
 
-  // NOVO: useEffect para buscar as playlists curtidas do usuário logado ao carregar a página
   useEffect(() => {
     fetchLoggedInUserLikedPlaylists();
   }, [fetchLoggedInUserLikedPlaylists]);
@@ -399,7 +399,7 @@ function PlaylistPage() {
     }
   };
 
-  // NOVO: Handler para o botão de curtir/descurtir
+  // Handler para o botão de curtir/descurtir
   const handleLikeToggle = async () => {
     if (!isAuthenticated) {
       navigate('/login'); // Redireciona para login se não autenticado
@@ -408,14 +408,11 @@ function PlaylistPage() {
     setLikeLoading(true);
     setLikeError(null);
     try {
-      // API: POST http://localhost:2200/maestro/playlist/curtir/{id_usuario}
       const response = await playlistApi.post(`/curtir/${userLoggedId}`, { playlistId: playlistId });
       console.log("Ação de curtir/descurtir playlist:", response.data);
 
-      // Re-fetch dos dados da playlist para atualizar a contagem de likes
-      await fetchData();
-      // Re-fetch das playlists curtidas do usuário logado para atualizar o estado 'isLiked' do botão
-      await fetchLoggedInUserLikedPlaylists();
+      await fetchData(); // Re-fetch dos dados da playlist para atualizar a contagem de likes
+      await fetchLoggedInUserLikedPlaylists(); // Re-fetch das playlists curtidas do usuário logado para atualizar o estado 'isLiked' do botão
 
     } catch (err) {
       console.error("Erro ao curtir/descurtir playlist:", err);
@@ -449,7 +446,9 @@ function PlaylistPage() {
   };
 
   const handleClickTrack = (track) => {
-    console.log("Música clicada:", track.trackName);
+    // Toca a música usando o contexto do player
+    playTrack(track.spotifyID, track.id); // Passa o spotifyID e o ID interno para highlight
+    console.log("Música clicada:", track.trackName, "Spotify ID:", track.spotifyID);
   };
 
 
@@ -594,13 +593,13 @@ function PlaylistPage() {
                                    ? 'bg-[#FFF3F3] text-[#AF204E] border-2 border-[#AF204E] shadow-[0px_0px_0px_3px_#FFF3F3] hover:bg-gray-100 hover:shadow-[0px_0px_0px_3px_#C93B6E]' // Descurtir
                                    : 'bg-[#AF204E] text-[#FFF9F9] border-2 border-[#FFF3F3] shadow-[0px_0px_0px_3px_#AF204E] hover:bg-[#C93B6E] hover:shadow-[0px_0px_0px_3px_#C93B6E]'}` // Curtir
                                }
-                    disabled={likeLoading || loading} // Desabilita se estiver logando ou se a página estiver carregando
+                    disabled={likeLoading || loading}
                 >
                     <FaHeart className="mr-2 inline-block" />
                     {likeLoading ? 'Processando...' : (isLiked ? 'Descurtir' : 'Curtir')}
                 </button>
             )}
-            {likeError && ( // Exibe erro do like/unlike
+            {likeError && (
                 <p className="text-red-500 text-sm mt-2">{likeError}</p>
             )}
           </div>
@@ -621,33 +620,38 @@ function PlaylistPage() {
           </div>
 
           {/* Lista de Músicas */}
-          {playlistTracks.map((track) => (
-            <button
-              key={track.id}
-              onClick={() => handleClickTrack(track)}
-              onContextMenu={(e) => handleTrackContextMenu(e, track)}
-              className="grid grid-cols-[2fr_1.5fr_0.5fr] items-center gap-4 py-3 px-2 rounded-lg hover:bg-[#AF204E]/15 transition-colors duration-200 w-full text-left"
-            >
-              {/* Info da Música */}
-              <div className="flex items-center min-w-0">
-                <img
-                  src={track.albumCoverURL || 'https://placehold.co/64x64/E0E0E0/787878?text=Track'}
-                  alt={track.trackName}
-                  className="w-16 h-16 object-cover rounded-md mr-4"
-                />
-                <div className="flex flex-col min-w-0">
-                  <p className="text-[#0F1108] font-semibold text-base truncate w-full">{track.trackName}</p>
-                  <p className="text-[#0F1108] text-sm opacity-80 truncate w-full">{track.artistName}</p>
+          {playlistTracks.map((track) => {
+            // Determina se esta música é a selecionada para o highlight
+            const isSelected = selectedTrackId === track.id;
+            return (
+              <button
+                key={track.id}
+                onClick={() => handleClickTrack(track)}
+                onContextMenu={(e) => handleTrackContextMenu(e, track)}
+                className={`grid grid-cols-[2fr_1.5fr_0.5fr] items-center gap-4 py-3 px-2 rounded-lg transition-colors duration-200 w-full text-left
+                           ${isSelected ? 'bg-[#AF204E]/25' : 'hover:bg-[#AF204E]/15'}`} 
+              >
+                {/* Info da Música */}
+                <div className="flex items-center min-w-0">
+                  <img
+                    src={track.albumCoverURL || 'https://placehold.co/64x64/E0E0E0/787878?text=Track'}
+                    alt={track.trackName}
+                    className="w-16 h-16 object-cover rounded-md mr-4"
+                  />
+                  <div className="flex flex-col min-w-0">
+                    <p className="text-[#0F1108] font-semibold text-base truncate w-full">{track.trackName}</p>
+                    <p className="text-[#0F1108] text-sm opacity-80 truncate w-full">{track.artistName}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Nome do Álbum */}
-              <p className="text-[#0F1108] text-base truncate w-full min-w-0">{track.albumName}</p>
+                {/* Nome do Álbum */}
+                <p className="text-[#0F1108] text-base truncate w-full min-w-0">{track.albumName}</p>
 
-              {/* Duração */}
-              <p className="text-[#0F1108] text-base text-right">{formatDuration(track.durationMs)}</p>
-            </button>
-          ))}
+                {/* Duração */}
+                <p className="text-[#0F1108] text-base text-right">{formatDuration(track.durationMs)}</p>
+              </button>
+            );
+          })}
         </div>
       ) : (
         <p className="text-lg col-span-full mt-8 text-[#76868C]">

@@ -4,65 +4,72 @@ import AppRoutes from './routes/AppRoutes.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import SearchBar from './components/SearchBar.jsx';
 import UserBar from './components/UserBar.jsx';
-import TopBackground from './components/TopBackground.jsx'; // Importe o novo componente
+import TopBackground from './components/TopBackground.jsx';
+import SpotifyEmbedPlayer from './components/SpotifyEmbedPlayer.jsx'; // NOVO: Importe o player de embed
+import { PlayerProvider } from './contexts/PlayerContext.jsx'; // NOVO: Importe o PlayerProvider
 
 function App() {
   const location = useLocation();
 
-  // Rotas onde os elementos fixos (sidebar, searchbar, userbar, top background) NÃO devem aparecer
   const noFixedElementsRoutes = ['/login', '/register', '/404'];
   const shouldShowFixedElements = !noFixedElementsRoutes.some(route =>
     location.pathname.startsWith(route)
   ) && location.pathname !== '*';
 
-  // Definições de dimensões para cálculo de paddings
-  const sidebarWidth = '271px'; // Largura da sidebar
-  const searchBarHeight = '80px'; // Altura estimada da SearchBar (h-12 + padding)
-  const userBarWidthEstimate = '300px'; // Ainda usado para o 'right' da SearchBar, não para o padding do main
-  const topBgHeight = '115px';
+  const sidebarWidth = '271px';
+  const searchBarHeight = '80px';
+  const userBarWidthEstimate = '300px';
+  const topBgHeight = '100px';
+  const playerHeight = '80px'; // Altura do player fixo na parte inferior
 
   return (
     <div className="App flex min-h-screen bg-[#FFF9F9] relative">
-      {/* Top Background Fixo */}
-      {shouldShowFixedElements && <TopBackground height={topBgHeight} />}
+      <PlayerProvider> {/* Envolve toda a aplicação que precisa do player */}
+        {/* Top Background Fixo */}
+        {shouldShowFixedElements && <TopBackground height={topBgHeight} className="z-30" />}
 
-      {/* Sidebar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
-      {shouldShowFixedElements && <Sidebar className="z-30" />} {/* Adicionado z-30 */}
+        {/* Sidebar Fixa */}
+        {shouldShowFixedElements && <Sidebar className="z-30" />}
 
-      {/* UserBar Fixa - Z-index para Sidebar e UserBar mais baixo que modais (z-50) */}
-      {shouldShowFixedElements && <UserBar className="z-30" />} {/* Adicionado z-30 */}
+        {/* UserBar Fixa */}
+        {shouldShowFixedElements && <UserBar className="z-30" />}
 
-      {/* SearchBar Fixa - Z-index para SearchBar mais baixo que modais (z-50) */}
-      {shouldShowFixedElements && (
-        <div
-          className="fixed top-4 z-30" // Alterado z-10 para z-30
+        {/* SearchBar Fixa */}
+        {shouldShowFixedElements && (
+          <div
+            className="fixed top-4 z-30"
+            style={{
+              left: `calc(${sidebarWidth} + 32px)`,
+              right: `calc(${userBarWidthEstimate} + 32px)`,
+              height: searchBarHeight,
+            }}
+          >
+            <SearchBar />
+          </div>
+        )}
+
+        <main
+          className={`flex-grow flex flex-col`}
           style={{
-            left: `calc(${sidebarWidth} + 32px)`,
-            right: `calc(${userBarWidthEstimate} + 32px)`,
-            height: searchBarHeight,
+            paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
+            paddingTop: shouldShowFixedElements ? topBgHeight : '0px',
+            paddingRight: shouldShowFixedElements ? '32px' : '0px',
+            // NOVO: Padding inferior para o player de embed
+            paddingBottom: shouldShowFixedElements ? playerHeight : '0px',
+
+            display: !shouldShowFixedElements ? 'flex' : undefined,
+            alignItems: !shouldShowFixedElements ? 'center' : undefined,
+            justifyContent: !shouldShowFixedElements ? 'center' : undefined,
+            height: !shouldShowFixedElements ? '100%' : undefined,
+            width: !shouldShowFixedElements ? '100%' : undefined,
           }}
         >
-          <SearchBar />
-        </div>
-      )}
+          <AppRoutes />
+        </main>
 
-      <main
-        className={`flex-grow flex flex-col`}
-        style={{
-          paddingLeft: shouldShowFixedElements ? `calc(${sidebarWidth} + 32px)` : '0px',
-          paddingTop: shouldShowFixedElements ? topBgHeight : '0px',
-          paddingRight: shouldShowFixedElements ? '32px' : '0px',
-          paddingBottom: shouldShowFixedElements ? '32px' : '0px',
-
-          display: !shouldShowFixedElements ? 'flex' : undefined,
-          alignItems: !shouldShowFixedElements ? 'center' : undefined,
-          justifyContent: !shouldShowFixedElements ? 'center' : undefined,
-          height: !shouldShowFixedElements ? '100%' : undefined,
-          width: !shouldShowFixedElements ? '100%' : undefined,
-        }}
-      >
-        <AppRoutes />
-      </main>
+        {/* Spotify Embed Player Fixo na parte inferior */}
+        {shouldShowFixedElements && <SpotifyEmbedPlayer />}
+      </PlayerProvider>
     </div>
   );
 }
