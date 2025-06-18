@@ -22,7 +22,6 @@ function LikedPlaylistsPage() {
       setError(null);
       try {
         const response = await playlistApi.get(`/curtidas/${userLoggedId}`);
-        // CORREÇÃO AQUI: Acessar 'response.data.likedPlaylists'
         setPlaylists(response.data.likedPlaylists || []);
         setLoading(false);
       } catch (err) {

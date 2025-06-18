@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // Importe useParams para pegar a tag da URL
-import { tagApi } from '../services/api.js'; // A API de tags contém o endpoint de busca por tag
+import { useNavigate, useParams } from 'react-router-dom'; 
+import { tagApi } from '../services/api.js';
 
 function SearchByTagPage() {
-  const { tagQuery } = useParams(); // Pega o nome da tag da URL (ex: /search/tags/Rock)
+  const { tagQuery } = useParams(); 
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,6 @@ function SearchByTagPage() {
 
   useEffect(() => {
     const fetchPlaylistsByTag = async () => {
-      // Se não houver tag na URL, exibe uma mensagem ou redireciona
       if (!tagQuery) {
         setLoading(false);
         setError('Nenhuma tag fornecida para busca.');
@@ -24,7 +23,6 @@ function SearchByTagPage() {
         // Endpoint: GET http://localhost:2250/maestro/tag/playlists-marcadas?q={nome_tag}
         const response = await tagApi.get(`/playlists-marcadas?q=${encodeURIComponent(tagQuery)}`);
         
-        // Filtra para exibir apenas playlists com isVisible = true
         const visiblePlaylists = response.data.playlists.filter(pl => pl.isVisible);
         
         setPlaylists(visiblePlaylists || []);
@@ -32,16 +30,16 @@ function SearchByTagPage() {
       } catch (err) {
         console.error(`Erro ao buscar playlists para a tag "${tagQuery}":`, err);
         setError('Não foi possível carregar as playlists para esta tag. Tente novamente mais tarde.');
-        setPlaylists([]); // Garante que a lista esteja vazia em caso de erro
+        setPlaylists([]); 
         setLoading(false);
       }
     };
 
     fetchPlaylistsByTag();
-  }, [tagQuery]); // Re-executa sempre que a tag na URL muda
+  }, [tagQuery]); 
 
   const handleClickPlaylist = (playlistId) => {
-    navigate(`/playlist/${playlistId}`); // Redireciona para a página da playlist
+    navigate(`/playlist/${playlistId}`); 
   };
 
   return (

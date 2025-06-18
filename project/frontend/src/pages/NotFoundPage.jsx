@@ -1,12 +1,10 @@
 import React from 'react';
-import tuninho from '../assets/placeholder-404.png'; // Imagem do gatinho
-
+import tuninho from '../assets/placeholder-404.png'; 
 function NotFoundPage() {
   return (
-    // O div terá fundo branco e centralizará o conteúdo na tela, ocupando 100% da largura e altura.
     <div className="flex flex-col items-center justify-center w-full h-full bg-[#FFF9F9] text-center p-8">
       <img
-        src={tuninho} // Usando a variável importada 'tuninho' para o caminho da imagem
+        src={tuninho} 
         alt="Gato confuso - Página não encontrada"
         className="w-64 h-auto mb-8"
       />

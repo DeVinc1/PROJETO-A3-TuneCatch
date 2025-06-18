@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Importe a API de usuários
 import { tagApi, playlistApi, userApi } from '../services/api.js';
-import { useAuth } from '../contexts/AuthContext.jsx'; // Importe o AuthContext para pegar o ID do usuário logado
-
-// Função auxiliar para embaralhar um array (Fisher-Yates shuffle)
+import { useAuth } from '../contexts/AuthContext.jsx'; 
 function shuffleArray(array) {
   const shuffledArray = [...array];
   for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -14,7 +12,6 @@ function shuffleArray(array) {
   return shuffledArray;
 }
 
-// Função auxiliar para obter a classe de cor com base na categoria
 const getCategoryColorClass = (category) => {
   switch (category) {
     case 'Vibe':
@@ -31,7 +28,7 @@ const getCategoryColorClass = (category) => {
 };
 
 function HomePage() {
-  const { userLoggedId } = useAuth(); // Pega o ID do usuário logado
+  const { userLoggedId } = useAuth(); 
   const [tags, setTags] = useState([]);
   const [playlists, setPlaylists] = useState([]);
   const [users, setUsers] = useState([]);
@@ -43,7 +40,6 @@ function HomePage() {
   const [errorUsers, setErrorUsers] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect para buscar Tags (inalterado)
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -61,13 +57,12 @@ function HomePage() {
     fetchTags();
   }, []);
 
-  // useEffect para buscar Playlists (inalterado)
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
         const response = await playlistApi.get('/');
         const visiblePlaylists = response.data.playlists.filter(pl => pl.isVisible);
-        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 12);
+        const selectedPlaylists = shuffleArray(visiblePlaylists).slice(0, 14);
         setPlaylists(selectedPlaylists);
         setLoadingPlaylists(false);
       } catch (err) {
@@ -80,21 +75,18 @@ function HomePage() {
     fetchPlaylists();
   }, []);
 
-  // useEffect para buscar Usuários
   useEffect(() => {
     const fetchUsers = async () => {
       setLoadingUsers(true);
       setErrorUsers(null);
       try {
         const response = await userApi.get('/');
-        const allUsers = response.data.users || response.data; // Adaptação caso a API retorne diretamente o array
+        const allUsers = response.data.users || response.data; 
 
-        // FILTRA O USUÁRIO LOGADO AQUI
         const filteredUsers = userLoggedId
           ? allUsers.filter(user => user.id !== userLoggedId)
           : allUsers;
 
-        // Embaralha e pega até 6 usuários *após* a filtragem
         const selectedUsers = shuffleArray(filteredUsers).slice(0, 6);
         setUsers(selectedUsers);
         setLoadingUsers(false);
@@ -105,11 +97,8 @@ function HomePage() {
       }
     };
 
-    // Só busca usuários se o userLoggedId já estiver disponível, ou se não houver um logado (para pegar todos)
-    // Se userLoggedId for null (não logado), ele vai buscar e não filtrar ninguém.
-    // Se userLoggedId for um número, ele buscará e filtrará.
     fetchUsers();
-  }, [userLoggedId]); // Dependência adicionada para re-executar quando userLoggedId muda
+  }, [userLoggedId]); 
 
   const handleClickTag = async (tagName) => {
     navigate(`/search/tags/${encodeURIComponent(tagName)}`);
