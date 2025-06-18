@@ -487,7 +487,7 @@ function PlaylistPage() {
         <div
             ref={coverImageRef}
             onContextMenu={handleCoverContextMenu}
-            className="relative w-64 h-64 flex-shrink-0 cursor-context-menu"
+            className="relative w-[350px] h-[350px] flex-shrink-0 cursor-context-menu"
         >
           <img
             src={playlistData.coverImageURL || 'https://placehold.co/256x256/E0E0E0/787878?text=Sem+Capa'}

@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // Importe useParams
+import { useNavigate, useParams } from 'react-router-dom'; 
 import { playlistApi } from '../services/api.js';
 
 function PlaylistsFromUserPage() {
-  const { id } = useParams(); // Pega o ID do usuário da URL (ex: /playlists-from/:id)
+  const { id } = useParams(); 
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [creatorUsername, setCreatorUsername] = useState(''); // Para exibir o nome do criador
+  const [creatorUsername, setCreatorUsername] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserPlaylists = async () => {
-      // Se não houver ID na URL, exibe um erro
       if (!id) {
         setLoading(false);
         setError('ID de usuário não fornecido na URL.');
@@ -24,7 +23,6 @@ function PlaylistsFromUserPage() {
       try {
         // Endpoint: GET http://localhost:2200/maestro/playlist/usuario/{id_URL}
         const response = await playlistApi.get(`/usuario/${id}`);
-        // Filtra APENAS as playlists visíveis (isVisible = true)
         const visiblePlaylists = response.data.playlists.filter(pl => pl.isVisible);
         
         setPlaylists(visiblePlaylists || []);
@@ -39,16 +37,16 @@ function PlaylistsFromUserPage() {
       } catch (err) {
         console.error('Erro ao buscar playlists do usuário:', err);
         setError('Não foi possível carregar as playlists deste usuário. Tente novamente mais tarde.');
-        setPlaylists([]); // Garante que a lista esteja vazia em caso de erro
+        setPlaylists([]); 
         setLoading(false);
       }
     };
 
     fetchUserPlaylists();
-  }, [id]); // Re-executa quando o ID do usuário na URL muda
+  }, [id]);
 
   const handleClickPlaylist = (playlistId) => {
-    navigate(`/playlist/${playlistId}`); // Redireciona para a página da playlist
+    navigate(`/playlist/${playlistId}`); 
   };
 
   return (

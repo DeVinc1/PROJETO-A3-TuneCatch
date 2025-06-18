@@ -33,7 +33,6 @@ function LoginPage() {
   };
 
   return (
-    // Removido 'min-h-screen' daqui. O 'main' em App.jsx já gerencia a altura da tela.
     <div className="flex flex-col items-center justify-center bg-[#FFF9F9] p-4 font-poppins">
       <div
         className="bg-[#FFF3F3] p-10 rounded-lg shadow-xl w-full max-w-lg border-2 border-[#AF204E]"

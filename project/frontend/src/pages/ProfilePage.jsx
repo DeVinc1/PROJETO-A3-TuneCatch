@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEllipsisH, FaPencilAlt, FaArrowRight, FaUser, FaEnvelope, FaLock, FaImage, FaUserCircle } from 'react-icons/fa'; // Importar todos os ícones necessários
-import { userApi } from '../services/api.js'; // API para buscar dados do usuário
-import { useAuth } from '../contexts/AuthContext.jsx'; // Contexto de autenticação
+import { FaEllipsisH, FaPencilAlt, FaArrowRight, FaUser, FaEnvelope, FaLock, FaImage, FaUserCircle } from 'react-icons/fa'; 
+import { userApi } from '../services/api.js';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 function ProfilePage() {
   const { userLoggedId, isAuthenticated, logout } = useAuth();
@@ -12,30 +12,27 @@ function ProfilePage() {
   const [isDeleteMenuOpen, setIsDeleteMenuOpen] = useState(false);
   const [hoveredBadgeId, setHoveredBadgeId] = useState(null);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false); // Estado para o modal de edição
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false); 
 
-  // Estados para o formulário de edição
   const [editUsername, setEditUsername] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editDisplayName, setEditDisplayName] = useState('');
   const [editAvatarURL, setEditAvatarURL] = useState('');
-  const [currentPassword, setCurrentPassword] = useState(''); // Senha atual é sempre necessária para a API
+  const [currentPassword, setCurrentPassword] = useState(''); 
   const [editFormError, setEditFormError] = useState(null);
   const [editFormSuccess, setEditFormSuccess] = useState(null);
 
 
   const navigate = useNavigate();
-  const menuButtonRef = useRef(null); // Ref para o botão de 3 pontinhos
-  const deleteMenuRef = useRef(null); // Ref para o div do menu dropdown de exclusão
+  const menuButtonRef = useRef(null);
+  const deleteMenuRef = useRef(null); 
 
-  // Função para buscar dados do perfil (refatorada para ser reutilizável)
   const fetchProfileData = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await userApi.get(`/${userLoggedId}`);
       setUserData(response.data);
-      // Pré-popular os campos do formulário de edição ao carregar os dados
       setEditUsername(response.data.username || '');
       setEditEmail(response.data.email || '');
       setEditDisplayName(response.data.displayName || '');
@@ -61,54 +58,50 @@ function ProfilePage() {
     }
   }, [userLoggedId, isAuthenticated, navigate]);
 
-  // Efeito para fechar o menu de 3 pontinhos ao clicar fora dele
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Se o clique foi no botão de 3 pontinhos, ou dentro do próprio menu de exclusão, não fecha
       if (menuButtonRef.current && menuButtonRef.current.contains(event.target)) {
         return;
       }
       if (deleteMenuRef.current && deleteMenuRef.current.contains(event.target)) {
         return;
       }
-      // Se o modal de confirmação ou edição está aberto, não fecha o menu de 3 pontinhos
       if (showConfirmDeleteModal || showEditProfileModal) {
         return;
       }
-      // Caso contrário, fecha o menu de 3 pontinhos
       setIsDeleteMenuOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showConfirmDeleteModal, showEditProfileModal]); // Adiciona dependências para reavaliar o listener
+  }, [showConfirmDeleteModal, showEditProfileModal]); 
 
 
   // --- Funções de Ação ---
 
   const handleEditProfileClick = () => {
-    setShowEditProfileModal(true); // Abre o modal de edição
-    setEditFormError(null); // Limpa erros anteriores
-    setEditFormSuccess(null); // Limpa mensagens de sucesso anteriores
-    setCurrentPassword(''); // Garante que a senha atual seja reiniciada
+    setShowEditProfileModal(true); 
+    setEditFormError(null); 
+    setEditFormSuccess(null); 
+    setCurrentPassword(''); 
   };
 
   const handleCloseEditModal = () => {
-    setShowEditProfileModal(false); // Fecha o modal de edição
+    setShowEditProfileModal(false); 
     setEditFormError(null);
     setEditFormSuccess(null);
-    setCurrentPassword(''); // Limpa a senha atual ao fechar
+    setCurrentPassword(''); 
   };
 
   const handleSubmitEditProfile = async (e) => {
     e.preventDefault();
-    setLoading(true); // Ativa loading global
+    setLoading(true);
     setEditFormError(null);
     setEditFormSuccess(null);
 
     const payload = {
-      currentPassword: currentPassword, // Senha atual é OBRIGATÓRIA para a API
+      currentPassword: currentPassword, 
       username: editUsername,
       email: editEmail,
       displayName: editDisplayName,
@@ -121,13 +114,11 @@ function ProfilePage() {
       console.log("Perfil atualizado com sucesso:", response.data);
       setEditFormSuccess("Perfil atualizado com sucesso!");
 
-      // Re-fetch dos dados do perfil para atualizar a UI
       await fetchProfileData();
 
-      // Opcional: fechar o modal após um pequeno atraso para o usuário ver a mensagem de sucesso
       setTimeout(() => {
         setShowEditProfileModal(false);
-        setCurrentPassword(''); // Limpa a senha após o sucesso
+        setCurrentPassword(''); 
       }, 1500);
 
     } catch (err) {
@@ -135,7 +126,7 @@ function ProfilePage() {
       const errorMessage = err.response?.data?.message || "Erro ao atualizar perfil. Verifique seus dados e senha.";
       setEditFormError(errorMessage);
     } finally {
-      setLoading(false); // Desativa loading global
+      setLoading(false); 
     }
   };
 
@@ -144,20 +135,20 @@ function ProfilePage() {
   };
 
   const handleDeleteAccountConfirmation = (e) => {
-    e.stopPropagation(); // Impede que o clique se propague para o documento e feche o menu/modal
+    e.stopPropagation();
     console.log("handleDeleteAccountConfirmation called. Opening modal.");
-    setIsDeleteMenuOpen(false); // Fecha o menu de 3 pontinhos imediatamente
-    setShowConfirmDeleteModal(true); // Abre o modal de confirmação
+    setIsDeleteMenuOpen(false); 
+    setShowConfirmDeleteModal(true); 
   };
 
   const handleConfirmDelete = async () => {
     setLoading(true);
-    setShowConfirmDeleteModal(false); // Fecha o modal de confirmação
+    setShowConfirmDeleteModal(false); 
     try {
       await userApi.delete(`/${userLoggedId}`);
       console.log("Conta deletada com sucesso!");
-      logout(); // Chama a função de logout do contexto
-      navigate('/login'); // Redireciona para a página de login
+      logout(); 
+      navigate('/login');
     } catch (err) {
       console.error("Erro ao deletar conta:", err);
       setError("Não foi possível deletar sua conta. Tente novamente mais tarde.");
@@ -168,7 +159,7 @@ function ProfilePage() {
 
   const handleCancelDelete = () => {
     console.log("Cancel delete clicked. Closing modal.");
-    setShowConfirmDeleteModal(false); // Fecha o modal de confirmação
+    setShowConfirmDeleteModal(false);
   };
 
   const handleClickPlaylist = (playlistId) => {
@@ -176,7 +167,7 @@ function ProfilePage() {
   };
 
   const handleClickUser = (userId) => {
-    navigate(`/users/${userId}`); // Redireciona para a página de perfil de outro usuário
+    navigate(`/users/${userId}`); 
   };
 
   // --- Renderização Condicional (Loading, Error, No Data) ---
@@ -210,8 +201,8 @@ function ProfilePage() {
   let deleteMenuRight = '0px';
   if (menuButtonRef.current) {
     const rect = menuButtonRef.current.getBoundingClientRect();
-    deleteMenuTop = `${rect.bottom + 8}px`; // Abaixo do botão de 3 pontinhos + 8px (mt-2)
-    deleteMenuRight = `${window.innerWidth - rect.right}px`; // Alinhado à direita com o botão
+    deleteMenuTop = `${rect.bottom + 8}px`; 
+    deleteMenuRight = `${window.innerWidth - rect.right}px`; 
   }
 
   return (

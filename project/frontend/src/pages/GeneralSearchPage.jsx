@@ -63,23 +63,22 @@ function GeneralSearchPage() {
     setLoading(true);
     setError(null);
     try {
-      // Realiza todas as chamadas API em paralelo
       const [usersResponse, playlistsResponse, tagsResponse, tracksResponse] = await Promise.allSettled([
-        userApi.get(`/nome-exibicao?q=${encodeURIComponent(query)}`),
+        userApi.get(`/nome-usuario/${encodeURIComponent(query)}`),
         playlistApi.get(`/publica/${encodeURIComponent(query)}`),
         tagApi.get(`/nome/${encodeURIComponent(query)}`),
         trackApi.get(`/playlists-com-musica/${encodeURIComponent(query)}`),
       ]);
 
-      // Processa a resposta de Usuários
       if (usersResponse.status === 'fulfilled' && usersResponse.value.data) {
-        setUsers(usersResponse.value.data.users || usersResponse.value.data);
+
+        const userData = usersResponse.value.data;
+        setUsers(userData ? (Array.isArray(userData) ? userData : [userData]) : []);
       } else {
         console.error('Erro ou falha na busca de usuários:', usersResponse.reason);
         setUsers([]);
       }
 
-      // Processa a resposta de Playlists por Nome
       if (playlistsResponse.status === 'fulfilled' && playlistsResponse.value.data) {
         setPlaylistsByName(playlistsResponse.value.data.playlists || playlistsResponse.value.data);
       } else {
@@ -87,7 +86,6 @@ function GeneralSearchPage() {
         setPlaylistsByName([]);
       }
 
-      // Processa a resposta de Tags
       if (tagsResponse.status === 'fulfilled' && tagsResponse.value.data) {
         setTags(tagsResponse.value.data.tags || tagsResponse.value.data);
       } else {
@@ -95,7 +93,6 @@ function GeneralSearchPage() {
         setTags([]);
       }
 
-      // Processa a resposta de Playlists por Música (Tracks)
       if (tracksResponse.status === 'fulfilled' && tracksResponse.value.data) {
         setPlaylistsByTrack(tracksResponse.value.data.playlists || tracksResponse.value.data);
       } else {
@@ -111,7 +108,6 @@ function GeneralSearchPage() {
     }
   };
 
-  // Handlers de clique (reutilizados)
   const handleClickTag = (tagName) => {
     navigate(`/search/tags/${encodeURIComponent(tagName)}`);
   };
