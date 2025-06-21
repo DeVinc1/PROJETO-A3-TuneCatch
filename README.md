@@ -1,4 +1,4 @@
-<h1><img src="./readme_assets/Logo - Red&White.png" width="40" style="border-radius: 10px;"git> <h1 align="center"> TuneCatch </h1> 
+<h1 align="center"> <img src="./readme_assets/Logo - Red&White.png" width="40" style="border-radius: 10px;"git> TuneCatch </h1> 
 <p align="center"> <em>Uma plataforma para a criação, compartilhamento e descoberta de playlists musicais de forma inteligente e contextual.</em> </p>
 <p align="center">
   <img src="https://github.com/DeVinc1/PROJETO-A3-TuneCatch/blob/main/readme_assets/TuneCatch-ui.png?raw=true" alt="Demonstração da Interface do TuneCatch" width="80%">
