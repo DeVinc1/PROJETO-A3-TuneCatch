@@ -8,12 +8,12 @@
 ## 📖 Sumário
 
 - [📋 Sobre o Projeto](#-sobre-o-projeto)
--  [🛠️ Tech Stack](#-tech-stack)
+-  [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
 - [✨ Funcionalidades](#-funcionalidades)
 - [📂 Estrutura do Projeto](#-estrutura-do-projeto)
-- [ 🚀API](#API)
+- [🚀 Endpoints da API](#-endpoints-da-api)
 - [👨‍💻 Autores](#-autores)
-- [❤️ Agradecimentos](#-agradecimentos)
+- [❤️ Agradecimentos](#%EF%B8%8F-agradecimentos)
 
 <hr>
 
